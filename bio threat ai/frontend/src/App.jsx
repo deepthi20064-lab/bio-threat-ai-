@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./App.css";
 
 import {
   Activity,
@@ -62,7 +63,7 @@ function App() {
   // Input state
   // ------------------------------------------------
 
-  const [zone, setZone] = useState("Zone A");
+  const [zone, setZone] = useState("Chennai - Zone A");
 
   const [reports, setReports] = useState(31);
 
@@ -129,7 +130,7 @@ function App() {
   const [result, setResult] = useState({
     analysis: {
 
-      zone: "Zone A",
+      zone: "Chennai - Zone A",
 
       reports: 31,
 
@@ -414,26 +415,26 @@ const getResourceStatus = (value) => {
   // ==================================================
 
   const worldZones = [
-    { name: "Chennai", country: "India", lat: 13.0827, lng: 80.2707, reports: 31, level: "CRITICAL" },
-    { name: "Mumbai", country: "India", lat: 19.0760, lng: 72.8777, reports: 9, level: "MODERATE" },
-    { name: "Bengaluru", country: "India", lat: 12.9716, lng: 77.5946, reports: 5, level: "LOW" },
-    { name: "London", country: "United Kingdom", lat: 51.5074, lng: -0.1278, reports: 14, level: "MODERATE" },
-    { name: "New York", country: "United States", lat: 40.7128, lng: -74.0060, reports: 21, level: "HIGH" },
-    { name: "Toronto", country: "Canada", lat: 43.6532, lng: -79.3832, reports: 7, level: "LOW" },
-    { name: "São Paulo", country: "Brazil", lat: -23.5505, lng: -46.6333, reports: 11, level: "MODERATE" },
-    { name: "Mexico City", country: "Mexico", lat: 19.4326, lng: -99.1332, reports: 8, level: "LOW" },
-    { name: "Cairo", country: "Egypt", lat: 30.0444, lng: 31.2357, reports: 13, level: "MODERATE" },
-    { name: "Nairobi", country: "Kenya", lat: -1.2921, lng: 36.8219, reports: 6, level: "LOW" },
-    { name: "Johannesburg", country: "South Africa", lat: -26.2041, lng: 28.0473, reports: 10, level: "MODERATE" },
-    { name: "Dubai", country: "United Arab Emirates", lat: 25.2048, lng: 55.2708, reports: 12, level: "MODERATE" },
-    { name: "Istanbul", country: "Türkiye", lat: 41.0082, lng: 28.9784, reports: 15, level: "HIGH" },
-    { name: "Moscow", country: "Russia", lat: 55.7558, lng: 37.6173, reports: 18, level: "HIGH" },
-    { name: "Tokyo", country: "Japan", lat: 35.6762, lng: 139.6503, reports: 16, level: "HIGH" },
-    { name: "Seoul", country: "South Korea", lat: 37.5665, lng: 126.9780, reports: 9, level: "MODERATE" },
-    { name: "Singapore", country: "Singapore", lat: 1.3521, lng: 103.8198, reports: 7, level: "LOW" },
-    { name: "Sydney", country: "Australia", lat: -33.8688, lng: 151.2093, reports: 6, level: "LOW" },
-    { name: "Paris", country: "France", lat: 48.8566, lng: 2.3522, reports: 12, level: "MODERATE" },
-    { name: "Berlin", country: "Germany", lat: 52.5200, lng: 13.4050, reports: 8, level: "LOW" },
+    { name: "Chennai", country: "India", zone: "Zone A", lat: 13.0827, lng: 80.2707, reports: 31, level: "CRITICAL" },
+    { name: "Mumbai", country: "India", zone: "Zone B", lat: 19.0760, lng: 72.8777, reports: 9, level: "MODERATE" },
+    { name: "Bengaluru", country: "India", zone: "Zone C", lat: 12.9716, lng: 77.5946, reports: 5, level: "LOW" },
+    { name: "London", country: "United Kingdom", zone: "Zone D", lat: 51.5074, lng: -0.1278, reports: 14, level: "MODERATE" },
+    { name: "New York", country: "United States", zone: "Zone E", lat: 40.7128, lng: -74.0060, reports: 21, level: "HIGH" },
+    { name: "Toronto", country: "Canada", zone: "Zone F", lat: 43.6532, lng: -79.3832, reports: 7, level: "LOW" },
+    { name: "São Paulo", country: "Brazil", zone: "Zone G", lat: -23.5505, lng: -46.6333, reports: 11, level: "MODERATE" },
+    { name: "Mexico City", country: "Mexico", zone: "Zone H", lat: 19.4326, lng: -99.1332, reports: 8, level: "LOW" },
+    { name: "Cairo", country: "Egypt", zone: "Zone I", lat: 30.0444, lng: 31.2357, reports: 13, level: "MODERATE" },
+    { name: "Nairobi", country: "Kenya", zone: "Zone J", lat: -1.2921, lng: 36.8219, reports: 6, level: "LOW" },
+    { name: "Johannesburg", country: "South Africa", zone: "Zone K", lat: -26.2041, lng: 28.0473, reports: 10, level: "MODERATE" },
+    { name: "Dubai", country: "United Arab Emirates", zone: "Zone L", lat: 25.2048, lng: 55.2708, reports: 12, level: "MODERATE" },
+    { name: "Istanbul", country: "Türkiye", zone: "Zone M", lat: 41.0082, lng: 28.9784, reports: 15, level: "HIGH" },
+    { name: "Moscow", country: "Russia", zone: "Zone N", lat: 55.7558, lng: 37.6173, reports: 18, level: "HIGH" },
+    { name: "Tokyo", country: "Japan", zone: "Zone O", lat: 35.6762, lng: 139.6503, reports: 16, level: "HIGH" },
+    { name: "Seoul", country: "South Korea", zone: "Zone P", lat: 37.5665, lng: 126.9780, reports: 9, level: "MODERATE" },
+    { name: "Singapore", country: "Singapore", zone: "Zone Q", lat: 1.3521, lng: 103.8198, reports: 7, level: "LOW" },
+    { name: "Sydney", country: "Australia", zone: "Zone R", lat: -33.8688, lng: 151.2093, reports: 6, level: "LOW" },
+    { name: "Paris", country: "France", zone: "Zone S", lat: 48.8566, lng: 2.3522, reports: 12, level: "MODERATE" },
+    { name: "Berlin", country: "Germany", zone: "Zone T", lat: 52.5200, lng: 13.4050, reports: 8, level: "LOW" },
   ];
 
 
@@ -488,6 +489,88 @@ const getResourceStatus = (value) => {
       popupAnchor: [0, -36],
     });
   };
+  const analysis = result.analysis;
+
+  // ==================================================
+  // LOCATION / ZONE LOOKUP + LIVE ACTIVITY
+  // ==================================================
+
+  const getZoneLocationLabel = (zoneValue) => {
+    const selected = worldZones.find(
+      (item) =>
+        `${item.name} - ${item.zone}` === zoneValue ||
+        item.name === zoneValue ||
+        item.zone === zoneValue
+    );
+
+    return selected
+      ? `${selected.name} - ${selected.zone}`
+      : zoneValue;
+  };
+
+  const selectedWorldZone =
+    worldZones.find(
+      (item) =>
+        `${item.name} - ${item.zone}` === zone
+    ) ||
+    worldZones.find((item) => item.name === zone) ||
+    worldZones.find((item) => item.zone === zone) ||
+    worldZones[0];
+
+  const formatActivityTime = (minutesAgo = 0) => {
+    const activityTime = new Date(
+      currentTime.getTime() - minutesAgo * 60 * 1000
+    );
+
+    return activityTime.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const recentActivities = [
+    ...worldZones
+      .slice()
+      .sort((a, b) => b.reports - a.reports)
+      .slice(0, 6)
+      .map((item, index) => ({
+        key: `${item.name}-${item.zone}`,
+        color:
+          item.level === "CRITICAL"
+            ? "red"
+            : item.level === "HIGH"
+            ? "orange"
+            : item.level === "MODERATE"
+            ? "yellow"
+            : "green",
+        title: `${item.name} - ${item.zone}`,
+        value: `${item.reports} reports • ${item.level}`,
+        time: formatActivityTime(index * 3),
+      })),
+    {
+      key: "environmental",
+      icon: <Leaf />,
+      title: `Environmental alert • ${selectedWorldZone.name} - ${selectedWorldZone.zone}`,
+      value: selectedWorldZone.country,
+      time: formatActivityTime(20),
+    },
+    {
+      key: "rapid-change",
+      icon: <Zap />,
+      title: `Rapid change • ${selectedWorldZone.name} - ${selectedWorldZone.zone}`,
+      value: `${analysis.increasePercentage}% vs baseline`,
+      time: formatActivityTime(26),
+    },
+    {
+      key: "cluster",
+      icon: <Users />,
+      title: `Geographic cluster • ${selectedWorldZone.name} - ${selectedWorldZone.zone}`,
+      value: selectedWorldZone.country,
+      time: formatActivityTime(32),
+    },
+  ];
+
   // ==================================================
   // ANALYZE DATA
   // ==================================================
@@ -586,9 +669,6 @@ const getResourceStatus = (value) => {
   };
 
 
-  const analysis = result.analysis;
-
-
   // ==================================================
   // RISK COLOR
   // ==================================================
@@ -659,8 +739,13 @@ const getResourceStatus = (value) => {
 
         <div className="brand">
 
-          <div className="dna-logo">
-            🧬
+          <div className="dna-logo" aria-label="BioThreat AI logo">
+            <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+              <path d="M18 7 C47 18 47 46 18 57" fill="none" stroke="#53e2a5" strokeWidth="4" strokeLinecap="round"/>
+              <path d="M46 7 C17 18 17 46 46 57" fill="none" stroke="#ff4f72" strokeWidth="4" strokeLinecap="round"/>
+              <path d="M23 14 L41 14 M18 25 L46 25 M18 39 L46 39 M23 50 L41 50" stroke="#8ed7ff" strokeWidth="2.5" strokeLinecap="round" opacity="0.9"/>
+              <circle cx="32" cy="32" r="5" fill="#53e2a5" opacity="0.95"/>
+            </svg>
           </div>
 
           <div>
@@ -807,12 +892,12 @@ const getResourceStatus = (value) => {
                 {activePage}
               </h2>
               <p style={{ margin: "6px 0 0", opacity: 0.65, fontSize: "13px" }}>
-                {activePage === "Dashboard" && "Live overview of surveillance activity and system status."}
-                {activePage === "New Analysis" && "Submit synthetic surveillance observations for analysis."}
-                {activePage === "Zone Map" && "Review the synthetic geographic distribution of incident reports."}
-                {activePage === "Statistics" && "Review the complete statistical and AI-assisted analysis."}
-                {activePage === "Emergency Readiness" && "Review synthetic hospital and emergency response preparedness."}
-                {activePage === "About" && "Learn how BioThreat AI supports human decision-making."}
+                {activePage === "Dashboard" && "Real-time overview of surveillance activity, risk, and system readiness."}
+                {activePage === "New Analysis" && "Enter synthetic observations and generate an explainable risk assessment."}
+                {activePage === "Zone Map" && "Explore synthetic incident patterns and risk levels across monitored locations."}
+                {activePage === "Statistics" && "Review evidence, trends, scoring, and the AI-assisted decision summary."}
+                {activePage === "Emergency Readiness" && "Review synthetic hospital capacity, staff, diagnostics, supplies, and alerts."}
+                {activePage === "About" && "Understand the purpose, workflow, and human-review safeguards behind BioThreat AI."}
               </p>
             </div>
 
@@ -843,8 +928,8 @@ const getResourceStatus = (value) => {
 
                 <PanelTitle
                   icon={<Activity />}
-                  title="Global Surveillance Command Center"
-                  subtitle="Live overview of the synthetic surveillance network."
+                  title="Global Surveillance Overview"
+                  subtitle="Live view of the synthetic surveillance network and current risk indicators."
                 />
 
                 <div
@@ -901,7 +986,7 @@ const getResourceStatus = (value) => {
                 <PanelTitle
                   icon={<AlertTriangle />}
                   title="Current Situation"
-                  subtitle="Highest-priority synthetic surveillance indicators."
+                  subtitle="Priority indicators requiring closer human review."
                 />
 
                 <div
@@ -939,7 +1024,7 @@ const getResourceStatus = (value) => {
                         marginTop: "7px",
                       }}
                     >
-                      {analysis.zone}
+                      {getZoneLocationLabel(analysis.zone)}
                     </strong>
 
                     <div
@@ -1046,7 +1131,7 @@ const getResourceStatus = (value) => {
                 <PanelTitle
                   icon={<MapPin />}
                   title="Global Zone Status"
-                  subtitle="Synthetic risk status across monitored worldwide zones."
+                  subtitle="Synthetic risk status across monitored locations worldwide."
                 />
 
                 <div
@@ -1086,7 +1171,7 @@ const getResourceStatus = (value) => {
                           }}
                         >
                           <strong>
-                            {worldZone.name}
+                            {worldZone.name} - {worldZone.zone}
                           </strong>
 
                           <span
@@ -1314,14 +1399,14 @@ const getResourceStatus = (value) => {
                   >
                     {worldZones.map((worldZone) => (
                       <option
-                        key={`${worldZone.name}-${worldZone.country}`}
-                        value={worldZone.name}
+                        key={`${worldZone.name}-${worldZone.zone}`}
+                        value={`${worldZone.name} - ${worldZone.zone}`}
                         style={{
                           background: "#062330",
                           color: "#ffffff",
                         }}
                       >
-                        {worldZone.name}, {worldZone.country}
+                        {worldZone.name} - {worldZone.zone}
                       </option>
                     ))}
                   </select>
@@ -1508,7 +1593,7 @@ const getResourceStatus = (value) => {
               <PanelTitle
                 icon={<MapPin />}
                 title="Worldwide Geographic View"
-                subtitle="Worldwide synthetic incident reports by region"
+                subtitle="Synthetic incident reports by region"
               />
 
 
@@ -1540,7 +1625,9 @@ const getResourceStatus = (value) => {
                       icon={createRiskIcon(worldZone.level)}
                     >
                       <Popup>
-                        <strong>{worldZone.name}</strong>
+                        <strong>
+                          {worldZone.name} - {worldZone.zone}
+                        </strong>
                         <br />
                         {worldZone.country}
                         <br />
@@ -1561,7 +1648,10 @@ const getResourceStatus = (value) => {
                     style={{
                       background: getRiskColor(
                         worldZones.find(
-                          (item) => item.name === analysis.zone
+                          (item) =>
+                            `${item.name} - ${item.zone}` === analysis.zone ||
+                            item.name === analysis.zone ||
+                            item.zone === analysis.zone
                         )?.level
                       ),
                     }}
@@ -1570,7 +1660,7 @@ const getResourceStatus = (value) => {
                   <div>
 
                     <strong>
-                      {analysis.zone}
+                      {getZoneLocationLabel(analysis.zone)}
                     </strong>
 
                     <small>
@@ -1614,59 +1704,134 @@ const getResourceStatus = (value) => {
 
             {/* ACTIVITY */}
 
-            {activePage === "Dashboard" && (
-            <section className="panel activity">
+          {activePage === "Dashboard" && (
+            <div className="dashboard-intelligence-grid">
 
-              <PanelTitle
-                icon={<Clock3 />}
-                title="Recent Activity"
-                subtitle="Live updates (synthetic)"
-              />
+              <section className="panel activity activity-premium">
 
+                <PanelTitle
+                  icon={<Clock3 />}
+                  title="Recent Activity"
+                  subtitle="Latest surveillance updates"
+                />
 
-              <ActivityRow
-                color="red"
-                title="Zone A"
-                value="31 reports"
-                time="12:44 PM"
-              />
+                <div className="activity-live-strip">
+                  <span className="live-dot"></span>
+                  <span>Network activity stream</span>
+                  <span className="activity-live-time">Updated {liveTime}</span>
+                </div>
 
-              <ActivityRow
-                color="yellow"
-                title="Zone B"
-                value="9 reports"
-                time="12:38 PM"
-              />
+                {recentActivities.map((item) => (
+                  <ActivityRow
+                    key={item.key}
+                    color={item.color}
+                    icon={item.icon}
+                    title={item.title}
+                    value={item.value}
+                    time={item.time}
+                  />
+                ))}
 
-              <ActivityRow
-                color="green"
-                title="Zone C"
-                value="5 reports"
-                time="12:21 PM"
-              />
+                <div className="activity-footer">
+                  <span>Last refreshed</span>
+                  <strong>{liveTime}</strong>
+                </div>
 
-              <ActivityRow
-                icon={<Leaf />}
-                title="Environmental alert detected"
-                time="12:10 PM"
-              />
+              </section>
 
-              <ActivityRow
-                icon={<Zap />}
-                title="Rapid increase in reports"
-                time="11:55 AM"
-              />
+              <section className="panel signal-center">
+                <div className="signal-orbit" aria-hidden="true"></div>
 
-              <ActivityRow
-                icon={<Users />}
-                title="Cluster detected in Zone A"
-                time="11:43 AM"
-              />
+                <div className="signal-header">
+                  <PanelTitle
+                    icon={<Brain />}
+                    title="AI Signal Center"
+                    subtitle="Interactive early-warning snapshot"
+                  />
+                  <span className="signal-status">ANALYSIS READY</span>
+                </div>
 
-            </section>
-            )}
+                <div className="signal-main">
+                  <div className="signal-score">
+                    <div className="score-ring" style={{
+                      "--score": `${Math.min(Number(analysis.riskScore) || 0, 100) * 3.6}deg`,
+                      "--risk-color": getRiskColor(analysis.riskLevel),
+                    }}>
+                      <div>
+                        <strong>{analysis.riskScore}</strong>
+                        <span>/ 100</span>
+                      </div>
+                    </div>
+                    <div className="score-copy">
+                      <span>Prototype Risk</span>
+                      <strong style={{ color: getRiskColor(analysis.riskLevel) }}>{analysis.riskLevel}</strong>
+                    </div>
+                  </div>
+
+                  <div className="signal-mini-chart" aria-label="Synthetic risk trend">
+                    <div className="mini-chart-label">SIGNAL TREND</div>
+                    <svg viewBox="0 0 220 78" role="img" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="signalFill" x1="0" x2="0" y1="0" y2="1">
+                          <stop offset="0%" stopColor="#53e2a5" stopOpacity="0.28" />
+                          <stop offset="100%" stopColor="#53e2a5" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M4 63 C25 60 32 53 48 56 S74 46 90 50 S108 38 126 43 S148 31 162 34 S186 20 216 14 L216 78 L4 78 Z" fill="url(#signalFill)" />
+                      <path d="M4 63 C25 60 32 53 48 56 S74 46 90 50 S108 38 126 43 S148 31 162 34 S186 20 216 14" fill="none" stroke="#53e2a5" strokeWidth="2.6" strokeLinecap="round" />
+                      <circle cx="216" cy="14" r="4" fill="#53e2a5" />
+                    </svg>
+                    <div className="trend-note">Current zone signal is above its baseline.</div>
+                  </div>
+                </div>
+
+                <div className="signal-grid">
+                  <div className={`signal-chip ${environmentalAlert ? "active" : ""}`}>
+                    <Leaf size={17} />
+                    <div>
+                      <span>Environmental</span>
+                      <strong>{environmentalAlert ? "Detected" : "Clear"}</strong>
+                    </div>
+                  </div>
+                  <div className={`signal-chip ${geographicCluster ? "active" : ""}`}>
+                    <Users size={17} />
+                    <div>
+                      <span>Geographic cluster</span>
+                      <strong>{geographicCluster ? "Detected" : "None"}</strong>
+                    </div>
+                  </div>
+                  <div className={`signal-chip ${rapidChange ? "active" : ""}`}>
+                    <Zap size={17} />
+                    <div>
+                      <span>Rapid change</span>
+                      <strong>{rapidChange ? `+${analysis.increasePercentage}%` : "Stable"}</strong>
+                    </div>
+                  </div>
+                  <div className="signal-chip">
+                    <MapPin size={17} />
+                    <div>
+                      <span>Active zone</span>
+                      <strong>{getZoneLocationLabel(analysis.zone)}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="signal-action-row">
+                  <div>
+                    <span>Human review</span>
+                    <strong>{analysis.humanDecisionRequired ? "Recommended now" : "Routine review"}</strong>
+                  </div>
+                  <button className="signal-action" onClick={() => setActivePage("Statistics")}>
+                    Open Assessment <TrendingUp size={16} />
+                  </button>
+                </div>
+              </section>
+
+            </div>
+          )}
 
           </div>
+
 
 
 {activePage === "Statistics" && (
@@ -2628,7 +2793,7 @@ const getResourceStatus = (value) => {
 
               <SectionHeading
                 icon={<CheckCircle2 />}
-                title="Potential Measures for Human Review"
+                title="Suggested Measures for Human Review"
               />
 
 
@@ -3625,8 +3790,8 @@ const getResourceStatus = (value) => {
           <section className="panel" style={{ marginTop: "24px", padding: "28px" }}>
             <PanelTitle
               icon={<AlertTriangle />}
-              title="Automatic Emergency Notification"
-              subtitle="Prototype alert routing to ON-DUTY emergency staff"
+              title="Emergency Notification"
+              subtitle="Prototype routing to on-duty emergency staff"
             />
 
             <div style={{
@@ -3851,7 +4016,7 @@ const getResourceStatus = (value) => {
               <PanelTitle
                 icon={<Shield />}
                 title="About BioThreat AI"
-                subtitle="AI-assisted early-warning and decision-support prototype"
+                subtitle="AI-assisted early-warning & decision-support prototype"
               />
 
               <div style={{
@@ -3865,7 +4030,7 @@ const getResourceStatus = (value) => {
                   background: "rgba(255,255,255,0.035)",
                   border: "1px solid rgba(255,255,255,0.08)",
                 }}>
-                  <h3 style={{ marginTop: 0 }}>What the system does</h3>
+                  <h3 style={{ marginTop: 0 }}>What BioThreat AI does</h3>
                   <p style={{ marginBottom: 0, lineHeight: "1.7", opacity: 0.75 }}>
                     BioThreat AI analyzes synthetic biosurveillance observations,
                     looks for unusual patterns, calculates a prototype risk score,
@@ -3880,7 +4045,7 @@ const getResourceStatus = (value) => {
                   background: "rgba(255,255,255,0.035)",
                   border: "1px solid rgba(255,255,255,0.08)",
                 }}>
-                  <h3 style={{ marginTop: 0 }}>Pages in this prototype</h3>
+                  <h3 style={{ marginTop: 0 }}>Prototype workspace</h3>
                   <div style={{ display: "grid", gap: "9px", fontSize: "14px", lineHeight: "1.6", opacity: 0.78 }}>
                     <div><strong>Dashboard:</strong> live high-level status and recent activity.</div>
                     <div><strong>New Analysis:</strong> enter synthetic observations and run the analysis.</div>
@@ -3912,7 +4077,7 @@ const getResourceStatus = (value) => {
                   background: "rgba(100,180,255,0.08)",
                   border: "1px solid rgba(100,180,255,0.18)",
                 }}>
-                  <h3 style={{ marginTop: 0 }}>Prototype data notice</h3>
+                  <h3 style={{ marginTop: 0 }}>Synthetic data notice</h3>
                   <p style={{ marginBottom: 0, lineHeight: "1.7", opacity: 0.78 }}>
                     Surveillance, hospital, staff, inventory, and notification values
                     shown in this prototype are synthetic demonstration data.
