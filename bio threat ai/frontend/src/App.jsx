@@ -3,7 +3,9 @@ import { useState } from "react";
 import {
   Activity,
   AlertTriangle,
+  Ambulance,
   BarChart3,
+  Bed,
   Brain,
   CalendarDays,
   CheckCircle2,
@@ -11,10 +13,13 @@ import {
   FileText,
   Leaf,
   MapPin,
+  Package,
   Search,
   Shield,
+  Stethoscope,
   TrendingUp,
   Users,
+  Wind,
   Zap,
 } from "lucide-react";
 
@@ -260,7 +265,77 @@ function App() {
 
   const [error, setError] = useState("");
 
+// ==================================================
+// HOSPITAL EMERGENCY READINESS
+// ==================================================
 
+const [hospital, setHospital] = useState({
+  name: "CityCare General Hospital",
+
+  totalBeds: 100,
+  availableBeds: 32,
+
+  totalICU: 20,
+  availableICU: 4,
+
+  totalIsolationBeds: 15,
+  availableIsolationBeds: 8,
+
+  oxygenCylinders: 42,
+  oxygenInUse: 18,
+  oxygenLevel: 72,
+
+  doctorsAvailable: 18,
+  doctorsRequired: 20,
+
+  nursesAvailable: 42,
+  nursesRequired: 50,
+
+  ppeKits: 1240,
+  testingSupplies: 380,
+
+  ambulancesAvailable: 4,
+  ambulancesTotal: 6,
+});
+
+const bedAvailability =
+  (hospital.availableBeds / hospital.totalBeds) * 100;
+
+const icuAvailability =
+  (hospital.availableICU / hospital.totalICU) * 100;
+
+const isolationAvailability =
+  (hospital.availableIsolationBeds /
+    hospital.totalIsolationBeds) * 100;
+
+const staffAvailability =
+  (
+    (hospital.doctorsAvailable /
+      hospital.doctorsRequired) +
+    (hospital.nursesAvailable /
+      hospital.nursesRequired)
+  ) / 2 * 100;
+
+const ambulanceAvailability =
+  (hospital.ambulancesAvailable /
+    hospital.ambulancesTotal) * 100;
+
+const hospitalReadiness = Math.round(
+  (
+    bedAvailability +
+    icuAvailability +
+    isolationAvailability +
+    hospital.oxygenLevel +
+    staffAvailability +
+    ambulanceAvailability
+  ) / 6
+);
+
+const getResourceStatus = (value) => {
+  if (value >= 75) return "READY";
+  if (value >= 50) return "MONITOR";
+  return "ATTENTION";
+};
   // ==================================================
   // ANALYZE DATA
   // ==================================================
@@ -1996,6 +2071,808 @@ function App() {
             </div>
 
           </section>
+                  {/* ==================================================
+            HOSPITAL EMERGENCY READINESS
+        ================================================== */}
+
+        <section
+          className="panel"
+          style={{
+            marginTop: "24px",
+            padding: "28px",
+          }}
+        >
+
+          {/* HEADER */}
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "20px",
+              flexWrap: "wrap",
+              marginBottom: "25px",
+            }}
+          >
+
+            <div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+
+                <Shield size={28} />
+
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: "28px",
+                  }}
+                >
+                  Hospital Emergency Readiness
+                </h2>
+
+              </div>
+
+              <p
+                style={{
+                  opacity: 0.7,
+                  marginTop: "7px",
+                  marginBottom: 0,
+                }}
+              >
+                Synthetic preparedness indicators for emergency planning.
+              </p>
+
+            </div>
+
+
+            {/* READINESS SCORE */}
+
+            <div
+              style={{
+                padding: "14px 20px",
+                borderRadius: "16px",
+                background:
+                  hospitalReadiness >= 75
+                    ? "rgba(80,220,150,0.12)"
+                    : hospitalReadiness >= 50
+                    ? "rgba(255,190,70,0.12)"
+                    : "rgba(255,80,80,0.12)",
+                border:
+                  hospitalReadiness >= 75
+                    ? "1px solid rgba(80,220,150,0.25)"
+                    : hospitalReadiness >= 50
+                    ? "1px solid rgba(255,190,70,0.25)"
+                    : "1px solid rgba(255,80,80,0.25)",
+                textAlign: "center",
+              }}
+            >
+
+              <small
+                style={{
+                  display: "block",
+                  opacity: 0.65,
+                  fontSize: "11px",
+                  letterSpacing: "1px",
+                }}
+              >
+                READINESS SCORE
+              </small>
+
+              <strong
+                style={{
+                  display: "block",
+                  fontSize: "32px",
+                  marginTop: "4px",
+                }}
+              >
+                {hospitalReadiness}%
+              </strong>
+
+              <span
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "700",
+                }}
+              >
+                {getResourceStatus(hospitalReadiness)}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          {/* SYNTHETIC DATA NOTICE */}
+
+          <div
+            style={{
+              padding: "14px 16px",
+              borderRadius: "12px",
+              background: "rgba(100,180,255,0.08)",
+              border: "1px solid rgba(100,180,255,0.18)",
+              marginBottom: "20px",
+              fontSize: "13px",
+              lineHeight: "1.5",
+            }}
+          >
+            <strong>Demo Hospital:</strong>{" "}
+            {hospital.name}
+            <br />
+            All hospital capacity and resource values shown here are
+            synthetic demonstration data and do not represent real hospital
+            availability.
+          </div>
+
+
+          {/* CONNECTION TO RISK ANALYSIS */}
+
+          <div
+            style={{
+              padding: "20px",
+              borderRadius: "16px",
+              background: "rgba(255,255,255,0.035)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              marginBottom: "20px",
+            }}
+          >
+
+            <SectionHeading
+              icon={<AlertTriangle />}
+              title="Preparedness Review"
+            />
+
+            <p
+              style={{
+                marginTop: "14px",
+                marginBottom: 0,
+                fontSize: "14px",
+                lineHeight: "1.6",
+                opacity: 0.75,
+              }}
+            >
+              Current surveillance assessment:
+              {" "}
+              <strong>
+                {analysis.riskLevel}
+              </strong>
+              . Hospital preparedness indicators can be reviewed alongside
+              surveillance signals by authorized human decision-makers.
+            </p>
+
+          </div>
+
+
+          {/* RESOURCE CARDS */}
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: "14px",
+              marginBottom: "20px",
+            }}
+          >
+
+            {/* GENERAL BEDS */}
+
+            <div
+              style={{
+                padding: "20px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.035)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+
+              <Bed size={24} />
+
+              <div
+                style={{
+                  marginTop: "14px",
+                  fontSize: "12px",
+                  opacity: 0.6,
+                }}
+              >
+                GENERAL BEDS
+              </div>
+
+              <strong
+                style={{
+                  display: "block",
+                  fontSize: "25px",
+                  marginTop: "5px",
+                }}
+              >
+                {hospital.availableBeds}
+                {" / "}
+                {hospital.totalBeds}
+              </strong>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                }}
+              >
+                {Math.round(bedAvailability)}% available
+              </div>
+
+              <div
+                style={{
+                  marginTop: "12px",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                  letterSpacing: "0.5px",
+                }}
+              >
+                {getResourceStatus(bedAvailability)}
+              </div>
+
+            </div>
+
+
+            {/* ICU */}
+
+            <div
+              style={{
+                padding: "20px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.035)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+
+              <Activity size={24} />
+
+              <div
+                style={{
+                  marginTop: "14px",
+                  fontSize: "12px",
+                  opacity: 0.6,
+                }}
+              >
+                ICU BEDS
+              </div>
+
+              <strong
+                style={{
+                  display: "block",
+                  fontSize: "25px",
+                  marginTop: "5px",
+                }}
+              >
+                {hospital.availableICU}
+                {" / "}
+                {hospital.totalICU}
+              </strong>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                }}
+              >
+                {Math.round(icuAvailability)}% available
+              </div>
+
+              <div
+                style={{
+                  marginTop: "12px",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                }}
+              >
+                {getResourceStatus(icuAvailability)}
+              </div>
+
+            </div>
+
+
+            {/* ISOLATION */}
+
+            <div
+              style={{
+                padding: "20px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.035)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+
+              <Shield size={24} />
+
+              <div
+                style={{
+                  marginTop: "14px",
+                  fontSize: "12px",
+                  opacity: 0.6,
+                }}
+              >
+                ISOLATION BEDS
+              </div>
+
+              <strong
+                style={{
+                  display: "block",
+                  fontSize: "25px",
+                  marginTop: "5px",
+                }}
+              >
+                {hospital.availableIsolationBeds}
+                {" / "}
+                {hospital.totalIsolationBeds}
+              </strong>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                }}
+              >
+                {Math.round(isolationAvailability)}% available
+              </div>
+
+              <div
+                style={{
+                  marginTop: "12px",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                }}
+              >
+                {getResourceStatus(isolationAvailability)}
+              </div>
+
+            </div>
+
+
+            {/* OXYGEN */}
+
+            <div
+              style={{
+                padding: "20px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.035)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+
+              <Wind size={24} />
+
+              <div
+                style={{
+                  marginTop: "14px",
+                  fontSize: "12px",
+                  opacity: 0.6,
+                }}
+              >
+                OXYGEN SUPPLY
+              </div>
+
+              <strong
+                style={{
+                  display: "block",
+                  fontSize: "25px",
+                  marginTop: "5px",
+                }}
+              >
+                {hospital.oxygenLevel}%
+              </strong>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                }}
+              >
+                {hospital.oxygenCylinders} cylinders
+              </div>
+
+              <div
+                style={{
+                  marginTop: "12px",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                }}
+              >
+                {getResourceStatus(hospital.oxygenLevel)}
+              </div>
+
+            </div>
+
+
+            {/* STAFF */}
+
+            <div
+              style={{
+                padding: "20px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.035)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+
+              <Users size={24} />
+
+              <div
+                style={{
+                  marginTop: "14px",
+                  fontSize: "12px",
+                  opacity: 0.6,
+                }}
+              >
+                STAFF READINESS
+              </div>
+
+              <strong
+                style={{
+                  display: "block",
+                  fontSize: "25px",
+                  marginTop: "5px",
+                }}
+              >
+                {Math.round(staffAvailability)}%
+              </strong>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                }}
+              >
+                Doctors: {hospital.doctorsAvailable}/
+                {hospital.doctorsRequired}
+                <br />
+                Nurses: {hospital.nursesAvailable}/
+                {hospital.nursesRequired}
+              </div>
+
+              <div
+                style={{
+                  marginTop: "12px",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                }}
+              >
+                {getResourceStatus(staffAvailability)}
+              </div>
+
+            </div>
+
+
+            {/* AMBULANCES */}
+
+            <div
+              style={{
+                padding: "20px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.035)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+
+              <MapPin size={24} />
+
+              <div
+                style={{
+                  marginTop: "14px",
+                  fontSize: "12px",
+                  opacity: 0.6,
+                }}
+              >
+                AMBULANCES
+              </div>
+
+              <strong
+                style={{
+                  display: "block",
+                  fontSize: "25px",
+                  marginTop: "5px",
+                }}
+              >
+                {hospital.ambulancesAvailable}
+                {" / "}
+                {hospital.ambulancesTotal}
+              </strong>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                }}
+              >
+                {Math.round(ambulanceAvailability)}% available
+              </div>
+
+              <div
+                style={{
+                  marginTop: "12px",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                }}
+              >
+                {getResourceStatus(ambulanceAvailability)}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          {/* ESSENTIAL SUPPLIES */}
+
+          <div
+            style={{
+              padding: "24px",
+              borderRadius: "18px",
+              background: "rgba(255,255,255,0.035)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              marginBottom: "20px",
+            }}
+          >
+
+            <SectionHeading
+              icon={<Package />}
+              title="Essential Supplies"
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "14px",
+                marginTop: "18px",
+              }}
+            >
+
+              <div
+                style={{
+                  padding: "16px",
+                  borderRadius: "12px",
+                  background: "rgba(255,255,255,0.035)",
+                }}
+              >
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "22px",
+                  }}
+                >
+                  {hospital.ppeKits}
+                </strong>
+
+                <span
+                  style={{
+                    fontSize: "12px",
+                    opacity: 0.6,
+                  }}
+                >
+                  PPE KITS
+                </span>
+              </div>
+
+
+              <div
+                style={{
+                  padding: "16px",
+                  borderRadius: "12px",
+                  background: "rgba(255,255,255,0.035)",
+                }}
+              >
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "22px",
+                  }}
+                >
+                  {hospital.testingSupplies}
+                </strong>
+
+                <span
+                  style={{
+                    fontSize: "12px",
+                    opacity: 0.6,
+                  }}
+                >
+                  TESTING SUPPLIES
+                </span>
+              </div>
+
+
+              <div
+                style={{
+                  padding: "16px",
+                  borderRadius: "12px",
+                  background: "rgba(255,255,255,0.035)",
+                }}
+              >
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "22px",
+                  }}
+                >
+                  {hospital.oxygenCylinders}
+                </strong>
+
+                <span
+                  style={{
+                    fontSize: "12px",
+                    opacity: 0.6,
+                  }}
+                >
+                  OXYGEN CYLINDERS
+                </span>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          {/* PRIORITY REVIEW */}
+
+          <div
+            style={{
+              padding: "24px",
+              borderRadius: "18px",
+              background: "rgba(255,170,60,0.08)",
+              border: "1px solid rgba(255,170,60,0.22)",
+              marginBottom: "20px",
+            }}
+          >
+
+            <SectionHeading
+              icon={<AlertTriangle />}
+              title="Priority Review Areas"
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(200px, 1fr))",
+                gap: "12px",
+                marginTop: "18px",
+              }}
+            >
+
+              <div
+                style={{
+                  padding: "14px",
+                  borderRadius: "12px",
+                  background: "rgba(255,255,255,0.035)",
+                }}
+              >
+                <strong>ICU Capacity</strong>
+                <p
+                  style={{
+                    margin: "6px 0 0",
+                    fontSize: "12px",
+                    opacity: 0.65,
+                  }}
+                >
+                  Review available critical-care capacity.
+                </p>
+              </div>
+
+
+              <div
+                style={{
+                  padding: "14px",
+                  borderRadius: "12px",
+                  background: "rgba(255,255,255,0.035)",
+                }}
+              >
+                <strong>Oxygen Readiness</strong>
+                <p
+                  style={{
+                    margin: "6px 0 0",
+                    fontSize: "12px",
+                    opacity: 0.65,
+                  }}
+                >
+                  Review oxygen availability and usage.
+                </p>
+              </div>
+
+
+              <div
+                style={{
+                  padding: "14px",
+                  borderRadius: "12px",
+                  background: "rgba(255,255,255,0.035)",
+                }}
+              >
+                <strong>Staffing</strong>
+                <p
+                  style={{
+                    margin: "6px 0 0",
+                    fontSize: "12px",
+                    opacity: 0.65,
+                  }}
+                >
+                  Review staffing capacity and coverage.
+                </p>
+              </div>
+
+
+              <div
+                style={{
+                  padding: "14px",
+                  borderRadius: "12px",
+                  background: "rgba(255,255,255,0.035)",
+                }}
+              >
+                <strong>Essential Supplies</strong>
+                <p
+                  style={{
+                    margin: "6px 0 0",
+                    fontSize: "12px",
+                    opacity: 0.65,
+                  }}
+                >
+                  Review PPE and testing supply levels.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          {/* HUMAN DECISION */}
+
+          <div
+            style={{
+              padding: "22px",
+              borderRadius: "16px",
+              background: "rgba(255,80,80,0.08)",
+              border: "1px solid rgba(255,80,80,0.2)",
+              textAlign: "center",
+            }}
+          >
+
+            <Shield
+              size={28}
+              style={{
+                marginBottom: "8px",
+              }}
+            />
+
+            <h3
+              style={{
+                margin: "0 0 8px",
+                fontSize: "18px",
+              }}
+            >
+              HUMAN REVIEW REQUIRED
+            </h3>
+
+            <p
+              style={{
+                margin: 0,
+                opacity: 0.65,
+                fontSize: "13px",
+                lineHeight: "1.5",
+              }}
+            >
+              These preparedness indicators are synthetic decision-support
+              information. Authorized hospital and public-health personnel
+              must review real-world capacity and make operational decisions.
+            </p>
+
+          </div>
+
+        </section>
 
 
           {/* ==================================================
