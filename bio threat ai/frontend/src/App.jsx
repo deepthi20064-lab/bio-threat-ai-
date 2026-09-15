@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   Activity,
   AlertTriangle,
@@ -23,17 +24,16 @@ import {
   MapContainer,
   Marker,
   Popup,
-
   TileLayer,
-  useMapEvents,
 } from "react-leaflet";
 
 import L from "leaflet";
 
+// ==================================================
+// Leaflet marker fix
+// ==================================================
 
-// Fix Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;
-
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -47,7 +47,15 @@ L.Icon.Default.mergeOptions({
 });
 
 
+// ==================================================
+// APP
+// ==================================================
+
 function App() {
+
+  // ------------------------------------------------
+  // Input state
+  // ------------------------------------------------
 
   const [zone, setZone] = useState("Zone A");
 
@@ -64,75 +72,186 @@ function App() {
 
   const [rapidChange, setRapidChange] =
     useState(true);
-const [symptoms, setSymptoms] = useState([]);
-const [otherSymptoms, setOtherSymptoms] = useState("");
-const symptomOptions = [
-  "Fever",
-  "Cough",
-  "Shortness of breath",
-  "Fatigue",
-  "Headache",
-  "Muscle aches",
-  "Sore throat",
-  "Nausea",
-  "Vomiting",
-  "Diarrhea"
-];
 
-const toggleSymptom = (symptom) => {
-  setSymptoms((currentSymptoms) => {
-    if (currentSymptoms.includes(symptom)) {
-      return currentSymptoms.filter(
-        (item) => item !== symptom
-      );
-    }
 
-    return [...currentSymptoms, symptom];
-  });
-};
+  // ------------------------------------------------
+  // Symptoms
+  // ------------------------------------------------
+
+  const [symptoms, setSymptoms] = useState([]);
+
+  const [otherSymptoms, setOtherSymptoms] =
+    useState("");
+
+
+  const symptomOptions = [
+    "Fever",
+    "Cough",
+    "Shortness of breath",
+    "Fatigue",
+    "Headache",
+    "Muscle aches",
+    "Sore throat",
+    "Nausea",
+    "Vomiting",
+    "Diarrhea",
+  ];
+
+
+  const toggleSymptom = (symptom) => {
+
+    setSymptoms((currentSymptoms) => {
+
+      if (currentSymptoms.includes(symptom)) {
+
+        return currentSymptoms.filter(
+          (item) => item !== symptom
+        );
+      }
+
+      return [
+        ...currentSymptoms,
+        symptom,
+      ];
+    });
+  };
+
+
+  // ------------------------------------------------
+  // Result
+  // ------------------------------------------------
 
   const [result, setResult] = useState({
     analysis: {
+
       zone: "Zone A",
+
       reports: 31,
+
       previousReports: 12,
+
       riskScore: 100,
+
       riskLevel: "CRITICAL",
+
       anomalyDetected: true,
+
       increasePercentage: 158,
+
+      trend: "EXTREME INCREASE",
+
+      monitoringPriority: "IMMEDIATE REVIEW",
+
+      statistics: {
+        currentReports: 31,
+        previousReports: 12,
+        absoluteChange: 19,
+        percentageChange: 158.3,
+        baselineRatio: 2.58,
+        activeSignals: 4,
+        maximumRiskScore: 100,
+      },
+
+      activeSignals: [
+        "Report spike",
+        "Environmental signal",
+        "Geographic clustering",
+        "Rapid change",
+      ],
+
+      symptoms: [],
+
+      otherSymptoms: "",
 
       evidence: [
         {
           signal: "Report spike",
           contribution: 40,
+          severity: "HIGH",
           detail:
-            "Reports increased by 158% compared with the previous baseline.",
+            "Reports increased by 158.3% compared with the previous baseline.",
         },
 
         {
           signal: "Environmental signal",
           contribution: 25,
+          severity: "MODERATE",
           detail:
-            "An environmental alert is present.",
+            "An environmental alert is present in the monitored zone.",
         },
 
         {
           signal: "Geographic clustering",
           contribution: 20,
+          severity: "MODERATE",
           detail:
-            "Reports show clustering within the monitored zone.",
+            "Reports appear concentrated within the monitored geographic zone.",
         },
 
         {
           signal: "Rapid change",
           contribution: 15,
+          severity: "MODERATE",
           detail:
-            "A rapid change in reporting activity was detected.",
+            "Reporting activity is changing rapidly compared with the baseline.",
         },
       ],
 
+      riskBreakdown: [
+        {
+          name: "Report Spike",
+          points: 40,
+          maximum: 40,
+          detected: true,
+        },
+        {
+          name: "Environmental Signal",
+          points: 25,
+          maximum: 25,
+          detected: true,
+        },
+        {
+          name: "Geographic Clustering",
+          points: 20,
+          maximum: 20,
+          detected: true,
+        },
+        {
+          name: "Rapid Change",
+          points: 15,
+          maximum: 15,
+          detected: true,
+        },
+      ],
+
+      trendData: [
+        {
+          label: "Previous",
+          value: 12,
+        },
+        {
+          label: "Current",
+          value: 31,
+        },
+      ],
+
+      dataQuality: "STRONG",
+
+      aiSummary:
+        "The system detected a critical pattern in Zone A. The strongest contributing signals should be reviewed by a human decision-maker.",
+
       recommendation:
-        "Human review recommended.",
+        "Immediate human review is recommended. Authorized public-health officials should assess whether enhanced surveillance and protective measures are required.",
+
+      potentialMeasures: [
+        "Increase local surveillance and reporting frequency.",
+        "Verify unusual reports with local health authorities.",
+        "Assess whether temporary public-health communication is appropriate.",
+        "Assess school and workplace attendance policies based on verified local evidence.",
+        "Assess whether temporary restrictions on high-risk public interactions are warranted.",
+      ],
+
+      humanDecisionRequired: true,
     },
   });
 
@@ -142,7 +261,10 @@ const toggleSymptom = (symptom) => {
   const [error, setError] = useState("");
 
 
-  // Send data to Node.js backend
+  // ==================================================
+  // ANALYZE DATA
+  // ==================================================
+
   const analyzeData = async () => {
 
     setLoading(true);
@@ -160,26 +282,25 @@ const toggleSymptom = (symptom) => {
             "Content-Type": "application/json",
           },
 
-         body: JSON.stringify({
+          body: JSON.stringify({
 
-    zone,
+            zone,
 
-    reports: Number(reports),
+            reports: Number(reports),
 
-    previousReports:
-        Number(previousReports),
+            previousReports:
+              Number(previousReports),
 
-    environmentalAlert,
+            environmentalAlert,
 
-    geographicCluster,
+            geographicCluster,
 
-    rapidChange,
+            rapidChange,
 
-    symptoms,
+            symptoms,
 
-    otherSymptoms,
-
-}),
+            otherSymptoms,
+          }),
         }
       );
 
@@ -188,6 +309,7 @@ const toggleSymptom = (symptom) => {
 
 
       if (!response.ok) {
+
         throw new Error(
           data.error || "Analysis failed"
         );
@@ -207,7 +329,6 @@ const toggleSymptom = (symptom) => {
     } finally {
 
       setLoading(false);
-
     }
   };
 
@@ -215,12 +336,43 @@ const toggleSymptom = (symptom) => {
   const analysis = result.analysis;
 
 
+  // ==================================================
+  // RISK COLOR
+  // ==================================================
+
+  const getRiskClass = () => {
+
+    if (analysis.riskLevel === "CRITICAL") {
+      return "critical";
+    }
+
+    if (analysis.riskLevel === "HIGH") {
+      return "high";
+    }
+
+    if (analysis.riskLevel === "MODERATE") {
+      return "moderate";
+    }
+
+    return "low";
+  };
+
+
+  const riskClass = getRiskClass();
+
+
+  // ==================================================
+  // MAIN UI
+  // ==================================================
+
   return (
 
     <div className="app">
 
 
-      {/* HEADER */}
+      {/* ==================================================
+          HEADER
+      ================================================== */}
 
       <header className="topbar">
 
@@ -283,10 +435,16 @@ const toggleSymptom = (symptom) => {
       </header>
 
 
+      {/* ==================================================
+          LAYOUT
+      ================================================== */}
+
       <div className="layout">
 
 
-        {/* SIDEBAR */}
+        {/* ==================================================
+            SIDEBAR
+        ================================================== */}
 
         <aside className="sidebar">
 
@@ -319,12 +477,16 @@ const toggleSymptom = (symptom) => {
         </aside>
 
 
-        {/* MAIN */}
+        {/* ==================================================
+            MAIN
+        ================================================== */}
 
         <main className="main">
 
 
-          {/* DISCLAIMER */}
+          {/* ==================================================
+              DISCLAIMER
+          ================================================== */}
 
           <div className="disclaimer">
 
@@ -340,7 +502,9 @@ const toggleSymptom = (symptom) => {
           </div>
 
 
-          {/* TOP GRID */}
+          {/* ==================================================
+              INPUT + MAP + ACTIVITY
+          ================================================== */}
 
           <div className="top-grid">
 
@@ -359,19 +523,23 @@ const toggleSymptom = (symptom) => {
               <div className="form">
 
                 <label>
-  Surveillance Area / Zone
-</label>
+                  Surveillance Area / Zone
+                </label>
 
-<div className="input">
-  <MapPin size={18} />
+                <div className="input">
 
-  <input
-    type="text"
-    value={zone}
-    placeholder="Enter any area or zone"
-    onChange={(e) => setZone(e.target.value)}
-  />
-</div>
+                  <MapPin size={18} />
+
+                  <input
+                    type="text"
+                    value={zone}
+                    placeholder="Enter any area or zone"
+                    onChange={(e) =>
+                      setZone(e.target.value)
+                    }
+                  />
+
+                </div>
 
 
                 <label>
@@ -425,6 +593,7 @@ const toggleSymptom = (symptom) => {
                   }
                 />
 
+
                 <Check
                   icon={<Users />}
                   text="Geographic clustering"
@@ -434,6 +603,7 @@ const toggleSymptom = (symptom) => {
                   }
                 />
 
+
                 <Check
                   icon={<Zap />}
                   text="Rapid temporal change"
@@ -442,54 +612,77 @@ const toggleSymptom = (symptom) => {
                     setRapidChange
                   }
                 />
-<div className="symptom-section">
 
-  <label>
-    Symptoms Observed
-  </label>
 
-  <p className="input-help">
-    Select symptoms observed in the submitted synthetic surveillance data.
-  </p>
+                {/* SYMPTOMS */}
 
-  <div className="symptom-grid">
+                <div className="symptom-section">
 
-    {symptomOptions.map((symptom) => (
-      <label
-        key={symptom}
-        className={`symptom-option ${
-          symptoms.includes(symptom)
-            ? "selected"
-            : ""
-        }`}
-      >
+                  <label>
+                    Symptoms Observed
+                  </label>
 
-        <input
-          type="checkbox"
-          checked={symptoms.includes(symptom)}
-          onChange={() => toggleSymptom(symptom)}
-        />
+                  <p className="input-help">
+                    Select symptoms observed in the submitted synthetic surveillance data.
+                  </p>
 
-        <span>
-          {symptom}
-        </span>
 
-      </label>
-    ))}
+                  <div className="symptom-grid">
 
-  </div>
+                    {symptomOptions.map(
+                      (symptom) => (
 
-  <input
-    className="other-symptom"
-    type="text"
-    value={otherSymptoms}
-    placeholder="Other symptoms (optional)"
-    onChange={(e) =>
-      setOtherSymptoms(e.target.value)
-    }
-  />
+                        <label
+                          key={symptom}
+                          className={
+                            `symptom-option ${
+                              symptoms.includes(
+                                symptom
+                              )
+                                ? "selected"
+                                : ""
+                            }`
+                          }
+                        >
 
-</div>
+                          <input
+                            type="checkbox"
+                            checked={symptoms.includes(
+                              symptom
+                            )}
+                            onChange={() =>
+                              toggleSymptom(
+                                symptom
+                              )
+                            }
+                          />
+
+                          <span>
+                            {symptom}
+                          </span>
+
+                        </label>
+
+                      )
+                    )}
+
+                  </div>
+
+
+                  <input
+                    className="other-symptom"
+                    type="text"
+                    value={otherSymptoms}
+                    placeholder="Other symptoms (optional)"
+                    onChange={(e) =>
+                      setOtherSymptoms(
+                        e.target.value
+                      )
+                    }
+                  />
+
+                </div>
+
 
                 <button
                   className="analyze"
@@ -559,11 +752,15 @@ const toggleSymptom = (symptom) => {
                   >
 
                     <Popup>
+
                       <strong>
                         Zone A
                       </strong>
+
                       <br />
+
                       31 synthetic reports
+
                     </Popup>
 
                   </Marker>
@@ -577,11 +774,15 @@ const toggleSymptom = (symptom) => {
                   >
 
                     <Popup>
+
                       <strong>
                         Zone B
                       </strong>
+
                       <br />
+
                       9 synthetic reports
+
                     </Popup>
 
                   </Marker>
@@ -595,11 +796,15 @@ const toggleSymptom = (symptom) => {
                   >
 
                     <Popup>
+
                       <strong>
                         Zone C
                       </strong>
+
                       <br />
+
                       5 synthetic reports
+
                     </Popup>
 
                   </Marker>
@@ -710,330 +915,1122 @@ const toggleSymptom = (symptom) => {
           </div>
 
 
-          {/* BOTTOM GRID */}
+          {/* ==================================================
+              RESULTS
+          ================================================== */}
 
-          <div className="bottom-grid">
+          <section
+            className="panel"
+            style={{
+              marginTop: "24px",
+              padding: "28px",
+            }}
+          >
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "20px",
+                marginBottom: "25px",
+                flexWrap: "wrap",
+              }}
+            >
+
+              <div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+
+                  <Brain size={28} />
+
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontSize: "28px",
+                    }}
+                  >
+                    BioThreat AI Analysis
+                  </h2>
+
+                </div>
+
+                <p
+                  style={{
+                    opacity: 0.7,
+                    marginTop: "7px",
+                  }}
+                >
+                  Decision-support assessment for {analysis.zone}
+                </p>
+
+              </div>
 
 
-            {/* ANALYSIS */}
+              <div
+                style={{
+                  padding: "10px 18px",
+                  borderRadius: "30px",
+                  border:
+                    "1px solid rgba(255,255,255,0.15)",
+                  fontSize: "13px",
+                  fontWeight: "700",
+                  letterSpacing: "1px",
+                }}
+              >
 
-            <section className="panel analysis">
+                SYNTHETIC DATA
 
-              <PanelTitle
-                icon={<Brain />}
-                title="Analysis Result"
-                subtitle="Risk assessment based on input data"
-              />
+              </div>
+
+            </div>
 
 
-              <div className="risk-cards">
+            {/* ==================================================
+                BIG RISK RESULT
+            ================================================== */}
 
-                <RiskCard
-                  title="Risk Score"
-                  value={`${analysis.riskScore}/100`}
-                  cls="critical"
-                  icon={<Activity />}
-                />
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "minmax(260px, 1.2fr) minmax(220px, 0.8fr)",
+                gap: "20px",
+                marginBottom: "22px",
+              }}
+            >
 
-                <RiskCard
-                  title="Risk Level"
-                  value={analysis.riskLevel}
-                  cls="high"
+              <div
+                className={`risk-card ${riskClass}`}
+                style={{
+                  minHeight: "220px",
+                  padding: "30px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  borderRadius: "20px",
+                }}
+              >
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                  }}
+                >
+
+                  <Activity size={30} />
+
+                  <span
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    PROTOTYPE RISK SCORE
+                  </span>
+
+                </div>
+
+
+                <strong
+                  style={{
+                    fontSize: "64px",
+                    lineHeight: "1",
+                    marginTop: "18px",
+                  }}
+                >
+                  {analysis.riskScore}
+                  <span
+                    style={{
+                      fontSize: "25px",
+                      opacity: 0.6,
+                    }}
+                  >
+                    /100
+                  </span>
+                </strong>
+
+
+                <span
+                  style={{
+                    marginTop: "12px",
+                    fontSize: "22px",
+                    fontWeight: "800",
+                    letterSpacing: "2px",
+                  }}
+                >
+                  {analysis.riskLevel}
+                </span>
+
+              </div>
+
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "15px",
+                }}
+              >
+
+                <MiniResult
                   icon={<AlertTriangle />}
-                />
-
-                <RiskCard
-                  title="Anomaly"
+                  title="Anomaly Status"
                   value={
                     analysis.anomalyDetected
                       ? "DETECTED"
                       : "NOT DETECTED"
                   }
-                  cls="anomaly"
+                />
+
+
+                <MiniResult
                   icon={<TrendingUp />}
+                  title="Trend"
+                  value={
+                    analysis.trend ||
+                    "STABLE"
+                  }
+                />
+
+
+                <MiniResult
+                  icon={<Clock3 />}
+                  title="Monitoring Priority"
+                  value={
+                    analysis.monitoringPriority ||
+                    "ROUTINE MONITORING"
+                  }
                 />
 
               </div>
 
+            </div>
 
-              <div className="recommendation">
 
-                <Shield size={25} />
+            {/* ==================================================
+                STATISTICS
+            ================================================== */}
 
-                <div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(160px, 1fr))",
+                gap: "14px",
+                marginBottom: "22px",
+              }}
+            >
 
-                  <strong>
-                    Recommended action
-                  </strong>
+              <StatBox
+                icon={<BarChart3 />}
+                value={
+                  analysis.statistics?.currentReports ??
+                  analysis.reports
+                }
+                label="Current Reports"
+              />
 
-                  <p>
-                    {analysis.recommendation}
-                  </p>
+
+              <StatBox
+                icon={<CalendarDays />}
+                value={
+                  analysis.statistics?.previousReports ??
+                  analysis.previousReports
+                }
+                label="Previous Baseline"
+              />
+
+
+              <StatBox
+                icon={<TrendingUp />}
+                value={
+                  analysis.statistics
+                    ? `+${
+                        analysis.statistics
+                          .absoluteChange
+                      }`
+                    : `+${
+                        analysis.reports -
+                        analysis.previousReports
+                      }`
+                }
+                label="Absolute Change"
+              />
+
+
+              <StatBox
+                icon={<Activity />}
+                value={
+                  analysis.statistics
+                    ? `+${
+                        analysis.statistics
+                          .percentageChange
+                      }%`
+                    : `+${
+                        analysis.increasePercentage
+                      }%`
+                }
+                label="Percentage Change"
+              />
+
+
+              <StatBox
+                icon={<BarChart3 />}
+                value={
+                  analysis.statistics?.baselineRatio
+                    ? `${analysis.statistics.baselineRatio}×`
+                    : "—"
+                }
+                label="Baseline Ratio"
+              />
+
+
+              <StatBox
+                icon={<Shield />}
+                value={
+                  analysis.dataQuality ||
+                  "LIMITED"
+                }
+                label="Data Quality"
+              />
+
+            </div>
+
+
+            {/* ==================================================
+                TWO COLUMN SECTION
+            ================================================== */}
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(300px, 1fr))",
+                gap: "20px",
+                marginBottom: "20px",
+              }}
+            >
+
+
+              {/* ACTIVE SIGNALS */}
+
+              <div
+                style={{
+                  padding: "24px",
+                  borderRadius: "18px",
+                  background:
+                    "rgba(255,255,255,0.035)",
+                  border:
+                    "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+
+                <SectionHeading
+                  icon={<Zap />}
+                  title="Active Signals"
+                />
+
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                    marginTop: "18px",
+                  }}
+                >
+
+                  {(analysis.activeSignals || [])
+                    .map(
+                      (signal, index) => (
+
+                        <div
+                          key={index}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            padding:
+                              "9px 13px",
+                            borderRadius:
+                              "20px",
+                            background:
+                              "rgba(255,90,90,0.10)",
+                            border:
+                              "1px solid rgba(255,90,90,0.22)",
+                            fontSize: "13px",
+                          }}
+                        >
+
+                          <span>
+                            ●
+                          </span>
+
+                          {signal}
+
+                        </div>
+
+                      )
+                    )}
 
                 </div>
 
               </div>
 
-            </section>
+
+              {/* SYMPTOMS */}
+
+              <div
+                style={{
+                  padding: "24px",
+                  borderRadius: "18px",
+                  background:
+                    "rgba(255,255,255,0.035)",
+                  border:
+                    "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+
+                <SectionHeading
+                  icon={<Users />}
+                  title="Symptoms Observed"
+                />
 
 
-            {/* EVIDENCE */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                    marginTop: "18px",
+                  }}
+                >
 
-            <section className="panel evidence">
+                  {(
+                    analysis.symptoms || []
+                  ).length > 0 ? (
 
-              <PanelTitle
-                icon={<FileText />}
-                title="Evidence"
-                subtitle="Signals contributing to risk score"
-              />
+                    analysis.symptoms.map(
+                      (symptom, index) => (
 
+                        <span
+                          key={index}
+                          style={{
+                            padding:
+                              "9px 14px",
+                            borderRadius:
+                              "18px",
+                            background:
+                              "rgba(100,180,255,0.12)",
+                            border:
+                              "1px solid rgba(100,180,255,0.22)",
+                            fontSize: "13px",
+                          }}
+                        >
+                          {symptom}
+                        </span>
 
-              {analysis.evidence.map(
-                (item, index) => (
+                      )
+                    )
 
-                  <div
-                    className="evidence-row"
-                    key={index}
-                  >
+                  ) : (
 
-                    <div className="evidence-icon">
+                    <span
+                      style={{
+                        opacity: 0.55,
+                        fontSize: "14px",
+                      }}
+                    >
+                      No symptoms selected.
+                    </span>
 
-                      {index === 0 &&
-                        <BarChart3 />}
-
-                      {index === 1 &&
-                        <Leaf />}
-
-                      {index === 2 &&
-                        <Users />}
-
-                      {index === 3 &&
-                        <Zap />}
-
-                    </div>
-
-
-                    <div className="evidence-text">
-
-                      <strong>
-                        {item.signal}
-                      </strong>
-
-                      <p>
-                        {item.detail}
-                      </p>
-
-                    </div>
-
-
-                    <strong className="points">
-                      +{item.contribution}
-                    </strong>
-
-                  </div>
-
-                )
-              )}
-
-            </section>
-
-
-            {/* GRAPH */}
-
-            <section className="panel trends">
-
-              <PanelTitle
-                icon={<TrendingUp />}
-                title="Trends"
-                subtitle={`Reported cases over time (${analysis.zone})`}
-              />
-
-
-              <div className="graph">
-
-                <div className="graph-header">
-
-                  <span>
-                    Reported cases
-                  </span>
-
-                  <strong>
-                    +{analysis.increasePercentage}%
-                  </strong>
+                  )}
 
                 </div>
 
 
+                {analysis.otherSymptoms && (
+
+                  <div
+                    style={{
+                      marginTop: "15px",
+                      padding: "12px",
+                      borderRadius: "10px",
+                      background:
+                        "rgba(255,255,255,0.04)",
+                      fontSize: "13px",
+                    }}
+                  >
+
+                    <strong>
+                      Other:
+                    </strong>{" "}
+
+                    {analysis.otherSymptoms}
+
+                  </div>
+
+                )}
+
+              </div>
+
+            </div>
+
+
+            {/* ==================================================
+                RISK BREAKDOWN
+            ================================================== */}
+
+            <div
+              style={{
+                padding: "24px",
+                borderRadius: "18px",
+                background:
+                  "rgba(255,255,255,0.035)",
+                border:
+                  "1px solid rgba(255,255,255,0.08)",
+                marginBottom: "20px",
+              }}
+            >
+
+              <SectionHeading
+                icon={<BarChart3 />}
+                title="Risk Score Breakdown"
+              />
+
+
+              <div
+                style={{
+                  marginTop: "20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "17px",
+                }}
+              >
+
+                {(analysis.riskBreakdown ||
+                  []
+                ).map(
+                  (item, index) => {
+
+                    const percentage =
+                      item.maximum > 0
+                        ? (item.points /
+                            item.maximum) *
+                          100
+                        : 0;
+
+                    return (
+
+                      <div key={index}>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent:
+                              "space-between",
+                            marginBottom:
+                              "7px",
+                            fontSize:
+                              "13px",
+                          }}
+                        >
+
+                          <span>
+                            {item.name}
+                          </span>
+
+                          <strong>
+                            +{item.points}
+                            {" "}
+                            /
+                            {" "}
+                            {item.maximum}
+                          </strong>
+
+                        </div>
+
+
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "8px",
+                            background:
+                              "rgba(255,255,255,0.08)",
+                            borderRadius:
+                              "10px",
+                            overflow:
+                              "hidden",
+                          }}
+                        >
+
+                          <div
+                            style={{
+                              width:
+                                `${percentage}%`,
+                              height:
+                                "100%",
+                              borderRadius:
+                                "10px",
+                              background:
+                                item.detected
+                                  ? "linear-gradient(90deg,#ff6b6b,#ff9f43)"
+                                  : "rgba(255,255,255,0.15)",
+                            }}
+                          />
+
+                        </div>
+
+                      </div>
+
+                    );
+                  }
+                )}
+
+              </div>
+
+            </div>
+
+
+            {/* ==================================================
+                EVIDENCE
+            ================================================== */}
+
+            <div
+              style={{
+                padding: "24px",
+                borderRadius: "18px",
+                background:
+                  "rgba(255,255,255,0.035)",
+                border:
+                  "1px solid rgba(255,255,255,0.08)",
+                marginBottom: "20px",
+              }}
+            >
+
+              <SectionHeading
+                icon={<FileText />}
+                title="Statistical & Surveillance Evidence"
+              />
+
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                  marginTop: "18px",
+                }}
+              >
+
+                {(analysis.evidence || [])
+                  .map(
+                    (item, index) => (
+
+                      <div
+                        key={index}
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            "45px 1fr auto",
+                          gap: "14px",
+                          alignItems:
+                            "center",
+                          padding:
+                            "16px",
+                          borderRadius:
+                            "14px",
+                          background:
+                            "rgba(255,255,255,0.035)",
+                        }}
+                      >
+
+                        <div
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius:
+                              "12px",
+                            display:
+                              "flex",
+                            alignItems:
+                              "center",
+                            justifyContent:
+                              "center",
+                            background:
+                              "rgba(255,255,255,0.07)",
+                          }}
+                        >
+
+                          {index === 0 && (
+                            <BarChart3
+                              size={20}
+                            />
+                          )}
+
+                          {index === 1 && (
+                            <Leaf
+                              size={20}
+                            />
+                          )}
+
+                          {index === 2 && (
+                            <Users
+                              size={20}
+                            />
+                          )}
+
+                          {index === 3 && (
+                            <Zap
+                              size={20}
+                            />
+                          )}
+
+                        </div>
+
+
+                        <div>
+
+                          <strong>
+                            {item.signal}
+                          </strong>
+
+                          <p
+                            style={{
+                              margin:
+                                "5px 0 0",
+                              opacity: 0.65,
+                              fontSize:
+                                "13px",
+                            }}
+                          >
+                            {item.detail}
+                          </p>
+
+                        </div>
+
+
+                        <strong
+                          style={{
+                            fontSize:
+                              "18px",
+                          }}
+                        >
+                          +{item.contribution}
+                        </strong>
+
+                      </div>
+
+                    )
+                  )}
+
+              </div>
+
+            </div>
+
+
+            {/* ==================================================
+                TREND
+            ================================================== */}
+
+            <div
+              style={{
+                padding: "24px",
+                borderRadius: "18px",
+                background:
+                  "rgba(255,255,255,0.035)",
+                border:
+                  "1px solid rgba(255,255,255,0.08)",
+                marginBottom: "20px",
+              }}
+            >
+
+              <SectionHeading
+                icon={<TrendingUp />}
+                title="Surveillance Trend"
+              />
+
+
+              <div
+                style={{
+                  marginTop: "20px",
+                  height: "220px",
+                  position: "relative",
+                }}
+              >
+
                 <svg
-                  viewBox="0 0 600 250"
+                  viewBox="0 0 700 240"
                   preserveAspectRatio="none"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
                 >
 
                   <line
                     x1="20"
                     y1="50"
-                    x2="580"
+                    x2="680"
                     y2="50"
-                    className="grid-line"
+                    stroke="rgba(255,255,255,0.08)"
                   />
 
                   <line
                     x1="20"
-                    y1="110"
-                    x2="580"
-                    y2="110"
-                    className="grid-line"
+                    y1="120"
+                    x2="680"
+                    y2="120"
+                    stroke="rgba(255,255,255,0.08)"
                   />
 
                   <line
                     x1="20"
-                    y1="170"
-                    x2="580"
-                    y2="170"
-                    className="grid-line"
-                  />
-
-                  <line
-                    x1="20"
-                    y1="220"
-                    x2="580"
-                    y2="220"
-                    className="grid-line"
-                  />
-
-
-                  <polygon
-                    points="
-                    20,205
-                    65,195
-                    110,190
-                    155,178
-                    200,185
-                    245,155
-                    290,165
-                    335,135
-                    380,145
-                    425,110
-                    470,95
-                    515,70
-                    580,25
-                    580,220
-                    20,220
-                    "
-                    className="area"
+                    y1="190"
+                    x2="680"
+                    y2="190"
+                    stroke="rgba(255,255,255,0.08)"
                   />
 
 
                   <polyline
-                    points="
-                    20,205
-                    65,195
-                    110,190
-                    155,178
-                    200,185
-                    245,155
-                    290,165
-                    335,135
-                    380,145
-                    425,110
-                    470,95
-                    515,70
-                    580,25
-                    "
-                    className="line"
+                    points="30,190 180,170 330,155 480,100 670,35"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
 
 
-                  {[
-                    [20, 205],
-                    [65, 195],
-                    [110, 190],
-                    [155, 178],
-                    [200, 185],
-                    [245, 155],
-                    [290, 165],
-                    [335, 135],
-                    [380, 145],
-                    [425, 110],
-                    [470, 95],
-                    [515, 70],
-                    [580, 25],
-                  ].map(
-                    ([x, y], i) => (
+                  <circle
+                    cx="30"
+                    cy="190"
+                    r="7"
+                    fill="currentColor"
+                  />
 
-                      <circle
-                        key={i}
-                        cx={x}
-                        cy={y}
-                        r="5"
-                        className="point"
-                      />
+                  <circle
+                    cx="180"
+                    cy="170"
+                    r="7"
+                    fill="currentColor"
+                  />
 
-                    )
-                  )}
+                  <circle
+                    cx="330"
+                    cy="155"
+                    r="7"
+                    fill="currentColor"
+                  />
+
+                  <circle
+                    cx="480"
+                    cy="100"
+                    r="7"
+                    fill="currentColor"
+                  />
+
+                  <circle
+                    cx="670"
+                    cy="35"
+                    r="9"
+                    fill="currentColor"
+                  />
 
                 </svg>
 
+
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "5%",
+                    bottom: "0",
+                    fontSize: "12px",
+                    opacity: 0.6,
+                  }}
+                >
+                  Previous
+                </div>
+
+
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "2%",
+                    top: "0",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                  }}
+                >
+                  Current
+                </div>
+
               </div>
 
+            </div>
 
-              <div className="stats">
 
-                <Stat
-                  icon={<Users />}
-                  value={analysis.reports}
-                  text="Current Reports"
-                />
+            {/* ==================================================
+                AI SUMMARY
+            ================================================== */}
 
-                <Stat
-                  icon={<TrendingUp />}
-                  value={`${analysis.increasePercentage}%`}
-                  text="Increase"
-                />
+            <div
+              style={{
+                padding: "25px",
+                borderRadius: "18px",
+                background:
+                  "linear-gradient(135deg, rgba(120,100,255,0.12), rgba(0,200,255,0.06))",
+                border:
+                  "1px solid rgba(120,140,255,0.2)",
+                marginBottom: "20px",
+              }}
+            >
 
-                <Stat
-                  icon={<CalendarDays />}
-                  value={analysis.previousReports}
-                  text="Previous Reports"
-                />
+              <SectionHeading
+                icon={<Brain />}
+                title="AI Situation Summary"
+              />
+
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.7",
+                  opacity: 0.85,
+                  marginTop: "18px",
+                  marginBottom: 0,
+                }}
+              >
+                {analysis.aiSummary}
+              </p>
+
+            </div>
+
+
+            {/* ==================================================
+                RECOMMENDATION
+            ================================================== */}
+
+            <div
+              style={{
+                padding: "25px",
+                borderRadius: "18px",
+                background:
+                  "rgba(255,170,60,0.08)",
+                border:
+                  "1px solid rgba(255,170,60,0.22)",
+                marginBottom: "20px",
+              }}
+            >
+
+              <SectionHeading
+                icon={<Shield />}
+                title="Recommended Action"
+              />
+
+
+              <p
+                style={{
+                  fontSize: "15px",
+                  lineHeight: "1.7",
+                  opacity: 0.85,
+                  marginTop: "18px",
+                }}
+              >
+                {analysis.recommendation}
+              </p>
+
+            </div>
+
+
+            {/* ==================================================
+                POTENTIAL MEASURES
+            ================================================== */}
+
+            <div
+              style={{
+                padding: "25px",
+                borderRadius: "18px",
+                background:
+                  "rgba(255,255,255,0.035)",
+                border:
+                  "1px solid rgba(255,255,255,0.08)",
+                marginBottom: "20px",
+              }}
+            >
+
+              <SectionHeading
+                icon={<CheckCircle2 />}
+                title="Potential Measures for Human Review"
+              />
+
+
+              <p
+                style={{
+                  fontSize: "12px",
+                  opacity: 0.55,
+                  marginTop: "8px",
+                }}
+              >
+                These are decision-support suggestions only.
+                Authorized officials must make the final decision.
+              </p>
+
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  marginTop: "18px",
+                }}
+              >
+
+                {(
+                  analysis.potentialMeasures ||
+                  []
+                ).map(
+                  (measure, index) => (
+
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems:
+                          "flex-start",
+                        gap: "12px",
+                        padding:
+                          "13px 15px",
+                        borderRadius:
+                          "12px",
+                        background:
+                          "rgba(255,255,255,0.035)",
+                      }}
+                    >
+
+                      <CheckCircle2
+                        size={18}
+                      />
+
+                      <span
+                        style={{
+                          fontSize:
+                            "14px",
+                          lineHeight:
+                            "1.5",
+                        }}
+                      >
+                        {measure}
+                      </span>
+
+                    </div>
+
+                  )
+                )}
 
               </div>
 
-            </section>
+            </div>
 
-          </div>
+
+            {/* ==================================================
+                HUMAN DECISION
+            ================================================== */}
+
+            <div
+              style={{
+                padding: "26px",
+                borderRadius: "18px",
+                border:
+                  "1px solid rgba(255,255,255,0.12)",
+                background:
+                  analysis.humanDecisionRequired
+                    ? "rgba(255,80,80,0.08)"
+                    : "rgba(80,220,150,0.07)",
+                textAlign: "center",
+              }}
+            >
+
+              <Shield
+                size={32}
+                style={{
+                  marginBottom: "10px",
+                }}
+              />
+
+
+              <h3
+                style={{
+                  margin: "0 0 8px",
+                  fontSize: "20px",
+                }}
+              >
+                {analysis.humanDecisionRequired
+                  ? "HUMAN DECISION REQUIRED"
+                  : "ROUTINE MONITORING"}
+              </h3>
+
+
+              <p
+                style={{
+                  margin: 0,
+                  opacity: 0.65,
+                  fontSize: "13px",
+                }}
+              >
+                AI identifies patterns and provides
+                decision support. Final decisions remain
+                with authorized human reviewers.
+              </p>
+
+            </div>
+
+          </section>
+
+
+          {/* ==================================================
+              FOOTER
+          ================================================== */}
+
+          <footer>
+
+            <strong>
+              🧬 BioThreat AI
+            </strong>
+
+            <span>
+              Synthetic Data • Educational Prototype • Built
+              for a Safer Tomorrow
+            </span>
+
+            <span>
+              One Health • Smarter Data • Stronger Communities
+            </span>
+
+          </footer>
 
         </main>
 
       </div>
-
-
-      {/* FOOTER */}
-
-      <footer>
-
-        <strong>
-          🧬 BioThreat AI
-        </strong>
-
-        <span>
-          Synthetic Data • Educational Prototype • Built
-          for a Safer Tomorrow
-        </span>
-
-        <span>
-          One Health • Smarter Data • Stronger Communities
-        </span>
-
-      </footer>
 
     </div>
   );
 }
 
 
-/* ---------- COMPONENTS ---------- */
-
+// ==================================================
+// SIDEBAR ITEM
+// ==================================================
 
 function SideItem({
   icon,
@@ -1058,10 +2055,13 @@ function SideItem({
       </span>
 
     </div>
-
   );
 }
 
+
+// ==================================================
+// PANEL TITLE
+// ==================================================
 
 function PanelTitle({
   icon,
@@ -1090,10 +2090,13 @@ function PanelTitle({
       </div>
 
     </div>
-
   );
 }
 
+
+// ==================================================
+// CHECKBOX
+// ==================================================
 
 function Check({
   icon,
@@ -1118,7 +2121,9 @@ function Check({
         type="checkbox"
         checked={checked}
         onChange={(e) =>
-          setChecked(e.target.checked)
+          setChecked(
+            e.target.checked
+          )
         }
       />
 
@@ -1127,10 +2132,164 @@ function Check({
       </span>
 
     </label>
-
   );
 }
 
+
+// ==================================================
+// MINI RESULT
+// ==================================================
+
+function MiniResult({
+  icon,
+  title,
+  value,
+}) {
+
+  return (
+
+    <div
+      style={{
+        flex: 1,
+        padding: "18px",
+        borderRadius: "16px",
+        background:
+          "rgba(255,255,255,0.035)",
+        border:
+          "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          opacity: 0.7,
+          fontSize: "12px",
+          textTransform: "uppercase",
+        }}
+      >
+
+        {icon}
+
+        <span>
+          {title}
+        </span>
+
+      </div>
+
+
+      <strong
+        style={{
+          display: "block",
+          marginTop: "9px",
+          fontSize: "17px",
+        }}
+      >
+        {value}
+      </strong>
+
+    </div>
+  );
+}
+
+
+// ==================================================
+// STAT BOX
+// ==================================================
+
+function StatBox({
+  icon,
+  value,
+  label,
+}) {
+
+  return (
+
+    <div
+      style={{
+        padding: "18px",
+        borderRadius: "15px",
+        background:
+          "rgba(255,255,255,0.035)",
+        border:
+          "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+
+      <div
+        style={{
+          opacity: 0.65,
+          marginBottom: "9px",
+        }}
+      >
+        {icon}
+      </div>
+
+      <strong
+        style={{
+          display: "block",
+          fontSize: "22px",
+        }}
+      >
+        {value}
+      </strong>
+
+      <span
+        style={{
+          display: "block",
+          marginTop: "4px",
+          opacity: 0.55,
+          fontSize: "12px",
+        }}
+      >
+        {label}
+      </span>
+
+    </div>
+  );
+}
+
+
+// ==================================================
+// SECTION HEADING
+// ==================================================
+
+function SectionHeading({
+  icon,
+  title,
+}) {
+
+  return (
+
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+      }}
+    >
+
+      {icon}
+
+      <h3
+        style={{
+          margin: 0,
+          fontSize: "18px",
+        }}
+      >
+        {title}
+      </h3>
+
+    </div>
+  );
+}
+
+
+// ==================================================
+// RISK CARD
+// ==================================================
 
 function RiskCard({
   title,
@@ -1141,7 +2300,9 @@ function RiskCard({
 
   return (
 
-    <div className={`risk-card ${cls}`}>
+    <div
+      className={`risk-card ${cls}`}
+    >
 
       <div className="risk-icon">
         {icon}
@@ -1156,10 +2317,13 @@ function RiskCard({
       </strong>
 
     </div>
-
   );
 }
 
+
+// ==================================================
+// ACTIVITY ROW
+// ==================================================
 
 function ActivityRow({
   color,
@@ -1195,9 +2359,11 @@ function ActivityRow({
         </strong>
 
         {value && (
+
           <small>
             {value}
           </small>
+
         )}
 
       </div>
@@ -1208,10 +2374,13 @@ function ActivityRow({
       </time>
 
     </div>
-
   );
 }
 
+
+// ==================================================
+// LEGEND
+// ==================================================
 
 function Legend({
   cls,
@@ -1229,11 +2398,13 @@ function Legend({
       {text}
 
     </div>
-
   );
-
 }
 
+
+// ==================================================
+// OLD STAT COMPONENT
+// ==================================================
 
 function Stat({
   icon,
@@ -1256,10 +2427,12 @@ function Stat({
       </span>
 
     </div>
-
   );
-
 }
 
+
+// ==================================================
+// EXPORT
+// ==================================================
 
 export default App;
