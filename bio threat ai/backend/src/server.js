@@ -74,7 +74,7 @@ app.get("/api/reports", (req, res) => {
 // Risk calculation
 // --------------------------------------------------
 
-function analyzeData(data) {
+ {
     const {
         reports,
         previousReports,
@@ -98,13 +98,11 @@ function analyzeData(data) {
     if (increasePercentage >= 50) {
         riskScore += 40;
 
-        evidence.push({
-            signal: "Report spike",
-            contribution: 40,
-            detail: `Reports increased by ${Math.round(
-                increasePercentage
-            )}% compared with the previous baseline.`
-        });
+       evidence.push({
+    signal: "Report spike",
+    contribution: 40,
+    detail: `Reports increased by ${increasePercentage}% compared with the previous baseline.`
+});
     }
 
     // ----------------------------------------------

@@ -64,7 +64,32 @@ function App() {
 
   const [rapidChange, setRapidChange] =
     useState(true);
+const [symptoms, setSymptoms] = useState([]);
+const [otherSymptoms, setOtherSymptoms] = useState("");
+const symptomOptions = [
+  "Fever",
+  "Cough",
+  "Shortness of breath",
+  "Fatigue",
+  "Headache",
+  "Muscle aches",
+  "Sore throat",
+  "Nausea",
+  "Vomiting",
+  "Diarrhea"
+];
 
+const toggleSymptom = (symptom) => {
+  setSymptoms((currentSymptoms) => {
+    if (currentSymptoms.includes(symptom)) {
+      return currentSymptoms.filter(
+        (item) => item !== symptom
+      );
+    }
+
+    return [...currentSymptoms, symptom];
+  });
+};
 
   const [result, setResult] = useState({
     analysis: {
@@ -135,22 +160,26 @@ function App() {
             "Content-Type": "application/json",
           },
 
-          body: JSON.stringify({
+         body: JSON.stringify({
 
-            zone,
+    zone,
 
-            reports: Number(reports),
+    reports: Number(reports),
 
-            previousReports:
-              Number(previousReports),
+    previousReports:
+        Number(previousReports),
 
-            environmentalAlert,
+    environmentalAlert,
 
-            geographicCluster,
+    geographicCluster,
 
-            rapidChange,
+    rapidChange,
 
-          }),
+    symptoms,
+
+    otherSymptoms,
+
+}),
         }
       );
 
@@ -413,7 +442,54 @@ function App() {
                     setRapidChange
                   }
                 />
+<div className="symptom-section">
 
+  <label>
+    Symptoms Observed
+  </label>
+
+  <p className="input-help">
+    Select symptoms observed in the submitted synthetic surveillance data.
+  </p>
+
+  <div className="symptom-grid">
+
+    {symptomOptions.map((symptom) => (
+      <label
+        key={symptom}
+        className={`symptom-option ${
+          symptoms.includes(symptom)
+            ? "selected"
+            : ""
+        }`}
+      >
+
+        <input
+          type="checkbox"
+          checked={symptoms.includes(symptom)}
+          onChange={() => toggleSymptom(symptom)}
+        />
+
+        <span>
+          {symptom}
+        </span>
+
+      </label>
+    ))}
+
+  </div>
+
+  <input
+    className="other-symptom"
+    type="text"
+    value={otherSymptoms}
+    placeholder="Other symptoms (optional)"
+    onChange={(e) =>
+      setOtherSymptoms(e.target.value)
+    }
+  />
+
+</div>
 
                 <button
                   className="analyze"
