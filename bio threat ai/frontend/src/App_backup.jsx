@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import {
   Activity,
@@ -265,79 +265,6 @@ function App() {
 
   const [error, setError] = useState("");
 
-  const [notifications, setNotifications] = useState([]);
-  const [activePage, setActivePage] = useState("Dashboard");
-
-  // ==================================================
-  // LIVE DATE & TIME
-  // ==================================================
-
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const liveTime = currentTime.toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
-
-  const liveDate = currentTime.toLocaleDateString("en-IN", {
-    month: "short",
-    day: "2-digit",
-    year: "numeric",
-  });
-
-// ==================================================
-// EMERGENCY STAFF, STOCK & DIAGNOSTICS
-// ==================================================
-
-const emergencyStaff = [
-  { id: "DOC001", name: "Dr. Arun Kumar", role: "Emergency Physician", department: "Emergency", specialty: "Emergency Medicine", phone: "+91 90000 00001", email: "arun.demo@hospital.test", shift: "08:00 AM - 04:00 PM", status: "ON DUTY" },
-  { id: "DOC002", name: "Dr. Priya Sharma", role: "Critical Care Specialist", department: "ICU", specialty: "Critical Care", phone: "+91 90000 00002", email: "priya.demo@hospital.test", shift: "08:00 AM - 04:00 PM", status: "ON DUTY" },
-  { id: "NUR001", name: "Nurse Meena", role: "Emergency Nurse", department: "Emergency", specialty: "Emergency Nursing", phone: "+91 90000 00003", email: "meena.demo@hospital.test", shift: "08:00 AM - 04:00 PM", status: "ON DUTY" },
-  { id: "DOC003", name: "Dr. Ravi Kumar", role: "Emergency Physician", department: "Emergency", specialty: "Emergency Medicine", phone: "+91 90000 00004", email: "ravi.demo@hospital.test", shift: "04:00 PM - 12:00 AM", status: "OFF DUTY" },
-];
-
-const onDutyStaff = emergencyStaff.filter((staff) => staff.status === "ON DUTY");
-
-const emergencyStock = [
-  { id: "MED001", name: "IV Fluids", category: "Emergency Medicine", required: 500, available: 720, unit: "bags" },
-  { id: "MED002", name: "Emergency Antibiotic Supply", category: "Medicine", required: 300, available: 180, unit: "units" },
-  { id: "MED003", name: "Oxygen Masks", category: "Medical Supply", required: 500, available: 120, unit: "units" },
-  { id: "MED004", name: "PPE Kits", category: "Protective Equipment", required: 1000, available: 1240, unit: "kits" },
-  { id: "MED005", name: "Testing Kits", category: "Diagnostics", required: 500, available: 180, unit: "kits" },
-];
-
-const getStockStatus = (available, required) => {
-  const percentage = (available / required) * 100;
-  if (percentage >= 75) return "READY";
-  if (percentage >= 50) return "LOW";
-  return "CRITICAL";
-};
-
-const diagnosticsLab = [
-  { id: "LAB001", name: "PCR Machines", available: 4, required: 5, unit: "machines" },
-  { id: "LAB002", name: "Rapid Testing Kits", available: 180, required: 500, unit: "kits" },
-  { id: "LAB003", name: "Lab Technicians", available: 8, required: 10, unit: "staff" },
-  { id: "LAB004", name: "Daily Testing Capacity", available: 800, required: 1000, unit: "tests/day" },
-  { id: "LAB005", name: "Reagents", available: 720, required: 600, unit: "units" },
-];
-
-const getLabStatus = (available, required) => {
-  const percentage = (available / required) * 100;
-  if (percentage >= 75) return "READY";
-  if (percentage >= 50) return "LOW";
-  return "CRITICAL";
-};
-
 // ==================================================
 // HOSPITAL EMERGENCY READINESS
 // ==================================================
@@ -410,85 +337,6 @@ const getResourceStatus = (value) => {
   return "ATTENTION";
 };
   // ==================================================
-  // WORLDWIDE SYNTHETIC MAP ZONES
-  // ==================================================
-
-  const worldZones = [
-    { name: "Chennai", country: "India", lat: 13.0827, lng: 80.2707, reports: 31, level: "CRITICAL" },
-    { name: "Mumbai", country: "India", lat: 19.0760, lng: 72.8777, reports: 9, level: "MODERATE" },
-    { name: "Bengaluru", country: "India", lat: 12.9716, lng: 77.5946, reports: 5, level: "LOW" },
-    { name: "London", country: "United Kingdom", lat: 51.5074, lng: -0.1278, reports: 14, level: "MODERATE" },
-    { name: "New York", country: "United States", lat: 40.7128, lng: -74.0060, reports: 21, level: "HIGH" },
-    { name: "Toronto", country: "Canada", lat: 43.6532, lng: -79.3832, reports: 7, level: "LOW" },
-    { name: "São Paulo", country: "Brazil", lat: -23.5505, lng: -46.6333, reports: 11, level: "MODERATE" },
-    { name: "Mexico City", country: "Mexico", lat: 19.4326, lng: -99.1332, reports: 8, level: "LOW" },
-    { name: "Cairo", country: "Egypt", lat: 30.0444, lng: 31.2357, reports: 13, level: "MODERATE" },
-    { name: "Nairobi", country: "Kenya", lat: -1.2921, lng: 36.8219, reports: 6, level: "LOW" },
-    { name: "Johannesburg", country: "South Africa", lat: -26.2041, lng: 28.0473, reports: 10, level: "MODERATE" },
-    { name: "Dubai", country: "United Arab Emirates", lat: 25.2048, lng: 55.2708, reports: 12, level: "MODERATE" },
-    { name: "Istanbul", country: "Türkiye", lat: 41.0082, lng: 28.9784, reports: 15, level: "HIGH" },
-    { name: "Moscow", country: "Russia", lat: 55.7558, lng: 37.6173, reports: 18, level: "HIGH" },
-    { name: "Tokyo", country: "Japan", lat: 35.6762, lng: 139.6503, reports: 16, level: "HIGH" },
-    { name: "Seoul", country: "South Korea", lat: 37.5665, lng: 126.9780, reports: 9, level: "MODERATE" },
-    { name: "Singapore", country: "Singapore", lat: 1.3521, lng: 103.8198, reports: 7, level: "LOW" },
-    { name: "Sydney", country: "Australia", lat: -33.8688, lng: 151.2093, reports: 6, level: "LOW" },
-    { name: "Paris", country: "France", lat: 48.8566, lng: 2.3522, reports: 12, level: "MODERATE" },
-    { name: "Berlin", country: "Germany", lat: 52.5200, lng: 13.4050, reports: 8, level: "LOW" },
-  ];
-
-
-  // ==================================================
-  // RISK-COLORED MAP MARKERS
-  // ==================================================
-
-  const getRiskColor = (level) => {
-    if (level === "LOW") return "#22c55e";
-    if (level === "MODERATE") return "#facc15";
-    if (level === "HIGH") return "#fb923c";
-    if (level === "CRITICAL") return "#f43f5e";
-    return "#60a5fa";
-  };
-
-  const createRiskIcon = (level) => {
-    const color = getRiskColor(level);
-
-    return L.divIcon({
-      className: "",
-      html: `
-        <div style="
-          width: 30px;
-          height: 36px;
-          position: relative;
-        ">
-          <div style="
-            width: 22px;
-            height: 22px;
-            background: ${color};
-            border: 3px solid #ffffff;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            position: absolute;
-            left: 4px;
-            top: 3px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-          "></div>
-          <div style="
-            width: 8px;
-            height: 8px;
-            background: #ffffff;
-            border-radius: 50%;
-            position: absolute;
-            left: 11px;
-            top: 10px;
-          "></div>
-        </div>
-      `,
-      iconSize: [30, 36],
-      iconAnchor: [15, 36],
-      popupAnchor: [0, -36],
-    });
-  };
-  // ==================================================
   // ANALYZE DATA
   // ==================================================
 
@@ -545,32 +393,6 @@ const getResourceStatus = (value) => {
 
       setResult(data);
 
-      // After a successful analysis, automatically open Statistics.
-      setActivePage("Statistics");
-
-      if (
-        data.analysis?.riskLevel === "HIGH" ||
-        data.analysis?.riskLevel === "CRITICAL"
-      ) {
-        const alertMessage =
-          `BioThreat AI ${data.analysis.riskLevel} alert for ${data.analysis.zone}. ` +
-          "Unusual surveillance activity requires human review.";
-
-        const newNotifications = onDutyStaff.map((staff) => ({
-          id: `${staff.id}-${Date.now()}`,
-          staffName: staff.name,
-          contact: staff.phone,
-          message: alertMessage,
-          status: "SENT",
-          sentAt: new Date().toLocaleTimeString(),
-        }));
-
-        setNotifications((previous) => [
-          ...newNotifications,
-          ...previous,
-        ]);
-      }
-
     } catch (err) {
 
       console.error(err);
@@ -612,34 +434,6 @@ const getResourceStatus = (value) => {
 
 
   const riskClass = getRiskClass();
-
-  const sendEmergencyAlert = () => {
-    if (
-      analysis.riskLevel !== "HIGH" &&
-      analysis.riskLevel !== "CRITICAL"
-    ) {
-      alert("Emergency alert routing is available for HIGH or CRITICAL prototype risk.");
-      return;
-    }
-
-    const alertMessage =
-      `BioThreat AI ${analysis.riskLevel} alert for ${analysis.zone}. ` +
-      "Unusual surveillance activity requires human review.";
-
-    const newNotifications = onDutyStaff.map((staff) => ({
-      id: `${staff.id}-${Date.now()}`,
-      staffName: staff.name,
-      contact: staff.phone,
-      message: alertMessage,
-      status: "SENT",
-      sentAt: new Date().toLocaleTimeString(),
-    }));
-
-    setNotifications((previous) => [
-      ...newNotifications,
-      ...previous,
-    ]);
-  };
 
 
   // ==================================================
@@ -702,25 +496,12 @@ const getResourceStatus = (value) => {
           <div className="date-box">
 
             <strong>
-              {liveDate}
+              SEP 15, 2026
             </strong>
 
             <span>
-              {liveTime}
+              12:45 PM
             </span>
-
-            <small
-              style={{
-                display: "block",
-                marginTop: "3px",
-                color: "#4ade80",
-                fontSize: "10px",
-                fontWeight: "700",
-                letterSpacing: "0.8px",
-              }}
-            >
-              ● LIVE
-            </small>
 
           </div>
 
@@ -745,43 +526,27 @@ const getResourceStatus = (value) => {
           <SideItem
             icon={<Activity />}
             text="Dashboard"
-            active={activePage === "Dashboard"}
-            onClick={() => setActivePage("Dashboard")}
+            active
           />
 
           <SideItem
             icon={<FileText />}
             text="New Analysis"
-            active={activePage === "New Analysis"}
-            onClick={() => setActivePage("New Analysis")}
           />
 
           <SideItem
             icon={<MapPin />}
             text="Zone Map"
-            active={activePage === "Zone Map"}
-            onClick={() => setActivePage("Zone Map")}
           />
 
           <SideItem
             icon={<BarChart3 />}
             text="Statistics"
-            active={activePage === "Statistics"}
-            onClick={() => setActivePage("Statistics")}
-          />
-
-          <SideItem
-            icon={<Shield />}
-            text="Emergency Readiness"
-            active={activePage === "Emergency Readiness"}
-            onClick={() => setActivePage("Emergency Readiness")}
           />
 
           <SideItem
             icon={<Shield />}
             text="About"
-            active={activePage === "About"}
-            onClick={() => setActivePage("About")}
           />
 
         </aside>
@@ -793,457 +558,6 @@ const getResourceStatus = (value) => {
 
         <main className="main">
 
-
-          <div style={{
-            marginBottom: "18px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "15px",
-            flexWrap: "wrap",
-          }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: "26px" }}>
-                {activePage}
-              </h2>
-              <p style={{ margin: "6px 0 0", opacity: 0.65, fontSize: "13px" }}>
-                {activePage === "Dashboard" && "Live overview of surveillance activity and system status."}
-                {activePage === "New Analysis" && "Submit synthetic surveillance observations for analysis."}
-                {activePage === "Zone Map" && "Review the synthetic geographic distribution of incident reports."}
-                {activePage === "Statistics" && "Review the complete statistical and AI-assisted analysis."}
-                {activePage === "Emergency Readiness" && "Review synthetic hospital and emergency response preparedness."}
-                {activePage === "About" && "Learn how BioThreat AI supports human decision-making."}
-              </p>
-            </div>
-
-            <div style={{
-              padding: "9px 13px",
-              borderRadius: "18px",
-              background: "rgba(80,220,150,0.09)",
-              border: "1px solid rgba(80,220,150,0.2)",
-              color: "#6ee7b7",
-              fontSize: "11px",
-              fontWeight: "700",
-              letterSpacing: "0.7px",
-            }}>
-              ● SYSTEM ONLINE
-            </div>
-          </div>
-
-          {activePage === "Dashboard" && (
-            <div
-              style={{
-                display: "grid",
-                gap: "20px",
-                marginBottom: "24px",
-              }}
-            >
-
-              <section className="panel" style={{ padding: "24px" }}>
-
-                <PanelTitle
-                  icon={<Activity />}
-                  title="Global Surveillance Command Center"
-                  subtitle="Live overview of the synthetic surveillance network."
-                />
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fit, minmax(170px, 1fr))",
-                    gap: "14px",
-                    marginTop: "20px",
-                  }}
-                >
-                  <StatBox
-                    icon={<Shield />}
-                    value={`${analysis.riskScore}/100`}
-                    label="Prototype Risk"
-                  />
-
-                  <StatBox
-                    icon={<AlertTriangle />}
-                    value={analysis.riskLevel}
-                    label="Risk Level"
-                  />
-
-                  <StatBox
-                    icon={<BarChart3 />}
-                    value={analysis.reports}
-                    label="Current Reports"
-                  />
-
-                  <StatBox
-                    icon={<TrendingUp />}
-                    value={`+${analysis.increasePercentage}%`}
-                    label="Baseline Change"
-                  />
-
-                  <StatBox
-                    icon={<MapPin />}
-                    value={worldZones.length}
-                    label="Global Zones"
-                  />
-
-                  <StatBox
-                    icon={<Shield />}
-                    value={`${hospitalReadiness}%`}
-                    label="Hospital Readiness"
-                  />
-                </div>
-
-              </section>
-
-
-              <section className="panel" style={{ padding: "24px" }}>
-
-                <PanelTitle
-                  icon={<AlertTriangle />}
-                  title="Current Situation"
-                  subtitle="Highest-priority synthetic surveillance indicators."
-                />
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fit, minmax(230px, 1fr))",
-                    gap: "14px",
-                    marginTop: "20px",
-                  }}
-                >
-
-                  <div
-                    style={{
-                      padding: "18px",
-                      borderRadius: "14px",
-                      background: "rgba(255,80,80,0.08)",
-                      border:
-                        "1px solid rgba(255,80,80,0.18)",
-                    }}
-                  >
-                    <small
-                      style={{
-                        opacity: 0.6,
-                        letterSpacing: "1px",
-                      }}
-                    >
-                      ACTIVE ZONE
-                    </small>
-
-                    <strong
-                      style={{
-                        display: "block",
-                        fontSize: "24px",
-                        marginTop: "7px",
-                      }}
-                    >
-                      {analysis.zone}
-                    </strong>
-
-                    <div
-                      style={{
-                        marginTop: "6px",
-                        fontSize: "13px",
-                        opacity: 0.7,
-                      }}
-                    >
-                      {analysis.reports} synthetic reports
-                    </div>
-                  </div>
-
-
-                  <div
-                    style={{
-                      padding: "18px",
-                      borderRadius: "14px",
-                      background: "rgba(255,170,60,0.08)",
-                      border:
-                        "1px solid rgba(255,170,60,0.2)",
-                    }}
-                  >
-                    <small
-                      style={{
-                        opacity: 0.6,
-                        letterSpacing: "1px",
-                      }}
-                    >
-                      MONITORING PRIORITY
-                    </small>
-
-                    <strong
-                      style={{
-                        display: "block",
-                        fontSize: "19px",
-                        marginTop: "7px",
-                      }}
-                    >
-                      {analysis.monitoringPriority ||
-                        "ROUTINE MONITORING"}
-                    </strong>
-
-                    <div
-                      style={{
-                        marginTop: "6px",
-                        fontSize: "13px",
-                        opacity: 0.7,
-                      }}
-                    >
-                      {analysis.humanDecisionRequired
-                        ? "Human review required"
-                        : "Routine review"}
-                    </div>
-                  </div>
-
-
-                  <div
-                    style={{
-                      padding: "18px",
-                      borderRadius: "14px",
-                      background: "rgba(80,220,150,0.07)",
-                      border:
-                        "1px solid rgba(80,220,150,0.18)",
-                    }}
-                  >
-                    <small
-                      style={{
-                        opacity: 0.6,
-                        letterSpacing: "1px",
-                      }}
-                    >
-                      DATA QUALITY
-                    </small>
-
-                    <strong
-                      style={{
-                        display: "block",
-                        fontSize: "24px",
-                        marginTop: "7px",
-                      }}
-                    >
-                      {analysis.dataQuality || "LIMITED"}
-                    </strong>
-
-                    <div
-                      style={{
-                        marginTop: "6px",
-                        fontSize: "13px",
-                        opacity: 0.7,
-                      }}
-                    >
-                      Synthetic demonstration dataset
-                    </div>
-                  </div>
-
-                </div>
-
-              </section>
-
-
-              <section className="panel" style={{ padding: "24px" }}>
-
-                <PanelTitle
-                  icon={<MapPin />}
-                  title="Global Zone Status"
-                  subtitle="Synthetic risk status across monitored worldwide zones."
-                />
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fit, minmax(200px, 1fr))",
-                    gap: "12px",
-                    marginTop: "20px",
-                  }}
-                >
-
-                  {worldZones.map((worldZone) => {
-                    const zoneColor = getRiskColor(
-                      worldZone.level
-                    );
-
-                    return (
-                      <div
-                        key={`${worldZone.name}-${worldZone.country}`}
-                        style={{
-                          padding: "15px",
-                          borderRadius: "14px",
-                          background:
-                            "rgba(255,255,255,0.035)",
-                          border:
-                            "1px solid rgba(255,255,255,0.08)",
-                        }}
-                      >
-
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: "10px",
-                          }}
-                        >
-                          <strong>
-                            {worldZone.name}
-                          </strong>
-
-                          <span
-                            style={{
-                              width: "10px",
-                              height: "10px",
-                              borderRadius: "50%",
-                              background: zoneColor,
-                              boxShadow:
-                                `0 0 10px ${zoneColor}`,
-                              flexShrink: 0,
-                            }}
-                          ></span>
-                        </div>
-
-                        <div
-                          style={{
-                            marginTop: "5px",
-                            fontSize: "12px",
-                            opacity: 0.6,
-                          }}
-                        >
-                          {worldZone.country}
-                        </div>
-
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            marginTop: "11px",
-                            fontSize: "12px",
-                          }}
-                        >
-                          <span>
-                            {worldZone.reports} reports
-                          </span>
-
-                          <strong
-                            style={{
-                              color: zoneColor,
-                            }}
-                          >
-                            {worldZone.level}
-                          </strong>
-                        </div>
-
-                      </div>
-                    );
-                  })}
-
-                </div>
-
-              </section>
-
-
-              <section className="panel" style={{ padding: "24px" }}>
-
-                <PanelTitle
-                  icon={<Zap />}
-                  title="Quick Actions"
-                  subtitle="Jump to the most useful BioThreat AI workspace."
-                />
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fit, minmax(190px, 1fr))",
-                    gap: "12px",
-                    marginTop: "18px",
-                  }}
-                >
-
-                  <button
-                    onClick={() =>
-                      setActivePage("New Analysis")
-                    }
-                    style={{
-                      padding: "15px",
-                      borderRadius: "12px",
-                      border:
-                        "1px solid rgba(100,180,255,0.2)",
-                      background:
-                        "rgba(100,180,255,0.08)",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      fontWeight: "700",
-                    }}
-                  >
-                    + New Analysis
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      setActivePage("Zone Map")
-                    }
-                    style={{
-                      padding: "15px",
-                      borderRadius: "12px",
-                      border:
-                        "1px solid rgba(80,220,150,0.2)",
-                      background:
-                        "rgba(80,220,150,0.08)",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      fontWeight: "700",
-                    }}
-                  >
-                    View Global Map
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      setActivePage("Statistics")
-                    }
-                    style={{
-                      padding: "15px",
-                      borderRadius: "12px",
-                      border:
-                        "1px solid rgba(255,170,60,0.2)",
-                      background:
-                        "rgba(255,170,60,0.08)",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      fontWeight: "700",
-                    }}
-                  >
-                    View Statistics
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      setActivePage(
-                        "Emergency Readiness"
-                      )
-                    }
-                    style={{
-                      padding: "15px",
-                      borderRadius: "12px",
-                      border:
-                        "1px solid rgba(255,80,80,0.2)",
-                      background:
-                        "rgba(255,80,80,0.08)",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      fontWeight: "700",
-                    }}
-                  >
-                    Emergency Readiness
-                  </button>
-
-                </div>
-
-              </section>
-
-            </div>          )}
 
           {/* ==================================================
               DISCLAIMER
@@ -1267,19 +581,11 @@ const getResourceStatus = (value) => {
               INPUT + MAP + ACTIVITY
           ================================================== */}
 
-          <div
-            className="top-grid"
-            style={
-              activePage === "Dashboard"
-                ? undefined
-                : { gridTemplateColumns: "1fr" }
-            }
-          >
+          <div className="top-grid">
 
 
             {/* INPUT */}
 
-            {activePage === "New Analysis" && (
             <section className="panel">
 
               <PanelTitle
@@ -1299,32 +605,14 @@ const getResourceStatus = (value) => {
 
                   <MapPin size={18} />
 
-                  <select
+                  <input
+                    type="text"
                     value={zone}
-                    onChange={(e) => setZone(e.target.value)}
-                    style={{
-                      flex: 1,
-                      background: "transparent",
-                      border: "none",
-                      outline: "none",
-                      color: "inherit",
-                      fontSize: "15px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {worldZones.map((worldZone) => (
-                      <option
-                        key={`${worldZone.name}-${worldZone.country}`}
-                        value={worldZone.name}
-                        style={{
-                          background: "#062330",
-                          color: "#ffffff",
-                        }}
-                      >
-                        {worldZone.name}, {worldZone.country}
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Enter any area or zone"
+                    onChange={(e) =>
+                      setZone(e.target.value)
+                    }
+                  />
 
                 </div>
 
@@ -1497,18 +785,16 @@ const getResourceStatus = (value) => {
               </div>
 
             </section>
-            )}
 
 
             {/* MAP */}
 
-            {activePage === "Zone Map" && (
             <section className="panel map-panel">
 
               <PanelTitle
                 icon={<MapPin />}
-                title="Worldwide Geographic View"
-                subtitle="Worldwide synthetic incident reports by region"
+                title="Geographic View"
+                subtitle="Synthetic incident reports by region"
               />
 
 
@@ -1516,10 +802,10 @@ const getResourceStatus = (value) => {
 
                 <MapContainer
                   center={[
-                    20,
-                    0,
+                    20.5937,
+                    78.9629,
                   ]}
-                  zoom={2}
+                  zoom={4}
                   scrollWheelZoom={true}
                   style={{
                     height: "100%",
@@ -1533,39 +819,77 @@ const getResourceStatus = (value) => {
                   />
 
 
-                  {worldZones.map((worldZone) => (
-                    <Marker
-                      key={`${worldZone.name}-${worldZone.country}`}
-                      position={[worldZone.lat, worldZone.lng]}
-                      icon={createRiskIcon(worldZone.level)}
-                    >
-                      <Popup>
-                        <strong>{worldZone.name}</strong>
-                        <br />
-                        {worldZone.country}
-                        <br />
-                        {worldZone.reports} synthetic reports
-                        <br />
-                        Status: {worldZone.level}
-                      </Popup>
-                    </Marker>
-                  ))}
+                  <Marker
+                    position={[
+                      13.0827,
+                      80.2707,
+                    ]}
+                  >
+
+                    <Popup>
+
+                      <strong>
+                        Zone A
+                      </strong>
+
+                      <br />
+
+                      31 synthetic reports
+
+                    </Popup>
+
+                  </Marker>
+
+
+                  <Marker
+                    position={[
+                      19.076,
+                      72.8777,
+                    ]}
+                  >
+
+                    <Popup>
+
+                      <strong>
+                        Zone B
+                      </strong>
+
+                      <br />
+
+                      9 synthetic reports
+
+                    </Popup>
+
+                  </Marker>
+
+
+                  <Marker
+                    position={[
+                      12.9716,
+                      77.5946,
+                    ]}
+                  >
+
+                    <Popup>
+
+                      <strong>
+                        Zone C
+                      </strong>
+
+                      <br />
+
+                      5 synthetic reports
+
+                    </Popup>
+
+                  </Marker>
 
                 </MapContainer>
 
 
                 <div className="map-card">
 
-                  <div
-                    className="pulse"
-                    style={{
-                      background: getRiskColor(
-                        worldZones.find(
-                          (item) => item.name === analysis.zone
-                        )?.level
-                      ),
-                    }}
-                  ></div>
+                  <div className="pulse"></div>
 
                   <div>
 
@@ -1609,12 +933,10 @@ const getResourceStatus = (value) => {
               </div>
 
             </section>
-            )}
 
 
             {/* ACTIVITY */}
 
-            {activePage === "Dashboard" && (
             <section className="panel activity">
 
               <PanelTitle
@@ -1664,13 +986,9 @@ const getResourceStatus = (value) => {
               />
 
             </section>
-            )}
 
           </div>
 
-
-{activePage === "Statistics" && (
-          <>
 
           {/* ==================================================
               RESULTS
@@ -2753,14 +2071,7 @@ const getResourceStatus = (value) => {
             </div>
 
           </section>
-          </>
-          )}
-
-
-{activePage === "Emergency Readiness" && (
-          <>
-
-          {/* ==================================================
+                  {/* ==================================================
             HOSPITAL EMERGENCY READINESS
         ================================================== */}
 
@@ -3565,363 +2876,8 @@ const getResourceStatus = (value) => {
 
 
           {/* ==================================================
-              EMERGENCY RESPONSE STAFF
-          ================================================== */}
-
-          <section className="panel" style={{ marginTop: "24px", padding: "28px" }}>
-            <PanelTitle
-              icon={<Users />}
-              title="Emergency Response Staff"
-              subtitle="Authorized staff available for emergency alert routing"
-            />
-
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "16px",
-              marginTop: "20px",
-            }}>
-              {emergencyStaff.map((staff) => (
-                <div key={staff.id} style={{
-                  padding: "18px",
-                  borderRadius: "14px",
-                  background: "rgba(255,255,255,0.035)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
-                    <strong>{staff.name}</strong>
-                    <span style={{ fontSize: "11px", fontWeight: "700" }}>
-                      {staff.status}
-                    </span>
-                  </div>
-                  <p style={{ margin: "10px 0 4px", fontWeight: "600" }}>{staff.role}</p>
-                  <p style={{ margin: "4px 0", fontSize: "13px", opacity: 0.7 }}>
-                    {staff.department} • {staff.specialty}
-                  </p>
-                  <p style={{ margin: "8px 0 4px", fontSize: "13px" }}>📞 {staff.phone}</p>
-                  <p style={{ margin: "4px 0", fontSize: "13px" }}>✉️ {staff.email}</p>
-                  <p style={{ margin: "4px 0", fontSize: "12px", opacity: 0.65 }}>
-                    Shift: {staff.shift}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div style={{
-              marginTop: "18px",
-              padding: "12px 14px",
-              borderRadius: "10px",
-              background: "rgba(255,170,60,0.08)",
-              fontSize: "12px",
-            }}>
-              Demo staff names and contact details are synthetic.
-            </div>
-          </section>
-
-          {/* ==================================================
-              AUTOMATIC EMERGENCY NOTIFICATIONS
-          ================================================== */}
-
-          <section className="panel" style={{ marginTop: "24px", padding: "28px" }}>
-            <PanelTitle
-              icon={<AlertTriangle />}
-              title="Automatic Emergency Notification"
-              subtitle="Prototype alert routing to ON-DUTY emergency staff"
-            />
-
-            <div style={{
-              marginTop: "18px",
-              padding: "16px",
-              borderRadius: "14px",
-              background: "rgba(255,255,255,0.035)",
-            }}>
-              <strong>Current prototype risk: {analysis.riskLevel}</strong>
-              <p style={{ margin: "7px 0 0", fontSize: "13px", opacity: 0.7 }}>
-                HIGH and CRITICAL results automatically create simulated
-                notifications for ON-DUTY staff.
-              </p>
-            </div>
-
-            <button
-              onClick={sendEmergencyAlert}
-              style={{
-                marginTop: "18px",
-                padding: "12px 18px",
-                border: "none",
-                borderRadius: "10px",
-                background: "#dc2626",
-                color: "#ffffff",
-                fontWeight: "700",
-                cursor: "pointer",
-              }}
-            >
-              Send / Resend Emergency Alert
-            </button>
-
-            {notifications.length > 0 && (
-              <div style={{ marginTop: "20px" }}>
-                <h3 style={{ marginBottom: "12px" }}>Notification Log</h3>
-                {notifications.map((notification) => (
-                  <div key={notification.id} style={{
-                    padding: "14px",
-                    marginTop: "10px",
-                    borderRadius: "12px",
-                    background: "rgba(255,255,255,0.035)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
-                      <strong>{notification.staffName}</strong>
-                      <span style={{ fontSize: "11px", fontWeight: "700" }}>
-                        ✓ {notification.status}
-                      </span>
-                    </div>
-                    <p style={{ margin: "6px 0", fontSize: "12px", opacity: 0.65 }}>
-                      📞 {notification.contact}
-                    </p>
-                    <p style={{ margin: "6px 0", fontSize: "13px", lineHeight: "1.5" }}>
-                      {notification.message}
-                    </p>
-                    <small style={{ opacity: 0.5 }}>
-                      Sent at {notification.sentAt}
-                    </small>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div style={{
-              marginTop: "18px",
-              padding: "12px 14px",
-              borderRadius: "10px",
-              background: "rgba(100,180,255,0.08)",
-              fontSize: "12px",
-              lineHeight: "1.5",
-            }}>
-              This prototype simulates message delivery inside the application.
-              It does not send real SMS, email, or medical instructions.
-            </div>
-          </section>
-
-          {/* ==================================================
-              EMERGENCY MEDICINE & SUPPLY STOCK
-          ================================================== */}
-
-          <section className="panel" style={{ marginTop: "24px", padding: "28px" }}>
-            <PanelTitle
-              icon={<Package />}
-              title="Emergency Medicine & Supply Stock"
-              subtitle="Emergency inventory readiness check"
-            />
-
-            <div style={{ display: "grid", gap: "12px", marginTop: "20px" }}>
-              {emergencyStock.map((item) => {
-                const percentage = Math.round((item.available / item.required) * 100);
-                const status = getStockStatus(item.available, item.required);
-
-                return (
-                  <div key={item.id} style={{
-                    padding: "16px",
-                    borderRadius: "14px",
-                    background: "rgba(255,255,255,0.035)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: "12px" }}>
-                      <div>
-                        <strong>{item.name}</strong>
-                        <div style={{ marginTop: "4px", fontSize: "12px", opacity: 0.6 }}>
-                          {item.category}
-                        </div>
-                      </div>
-                      <strong>{status}</strong>
-                    </div>
-
-                    <div style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginTop: "12px",
-                      fontSize: "13px",
-                    }}>
-                      <span>Available: {item.available} {item.unit}</span>
-                      <span>Required: {item.required} {item.unit}</span>
-                      <span>{percentage}%</span>
-                    </div>
-
-                    <div style={{
-                      height: "8px",
-                      marginTop: "10px",
-                      background: "rgba(255,255,255,0.08)",
-                      borderRadius: "10px",
-                      overflow: "hidden",
-                    }}>
-                      <div style={{
-                        width: `${Math.min(percentage, 100)}%`,
-                        height: "100%",
-                        borderRadius: "10px",
-                        background:
-                          status === "READY" ? "#16a34a" :
-                          status === "LOW" ? "#f59e0b" : "#dc2626",
-                      }} />
-                    </div>
-
-                    {status !== "READY" && (
-                      <div style={{ marginTop: "9px", fontSize: "12px", fontWeight: "600" }}>
-                        ⚠️ Replenishment review required.
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            <div style={{
-              marginTop: "18px",
-              padding: "12px 14px",
-              borderRadius: "10px",
-              background: "rgba(100,180,255,0.08)",
-              fontSize: "12px",
-            }}>
-              Inventory quantities are synthetic demonstration data.
-            </div>
-          </section>
-
-          {/* ==================================================
-              DIAGNOSTICS LAB
-          ================================================== */}
-
-          <section className="panel" style={{ marginTop: "24px", padding: "28px" }}>
-            <PanelTitle
-              icon={<Activity />}
-              title="Diagnostics Laboratory Readiness"
-              subtitle="Laboratory capacity and resource check"
-            />
-
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              gap: "14px",
-              marginTop: "20px",
-            }}>
-              {diagnosticsLab.map((item) => {
-                const percentage = Math.round((item.available / item.required) * 100);
-                const status = getLabStatus(item.available, item.required);
-
-                return (
-                  <div key={item.id} style={{
-                    padding: "18px",
-                    borderRadius: "14px",
-                    background: "rgba(255,255,255,0.035)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}>
-                    <strong>{item.name}</strong>
-                    <div style={{ marginTop: "10px", fontSize: "14px" }}>
-                      {item.available} / {item.required} {item.unit}
-                    </div>
-                    <div style={{ marginTop: "8px", fontWeight: "700" }}>{status}</div>
-                    <div style={{ marginTop: "6px", fontSize: "12px", opacity: 0.65 }}>
-                      Capacity: {percentage}%
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div style={{
-              marginTop: "18px",
-              padding: "12px 14px",
-              borderRadius: "10px",
-              background: "rgba(100,180,255,0.08)",
-              fontSize: "12px",
-            }}>
-              Laboratory values are synthetic demonstration data and represent
-              operational readiness only.
-            </div>
-          </section>
-
-
-          {/* ==================================================
               FOOTER
           ================================================== */}
-
-          </>
-          )}
-
-
-          {activePage === "About" && (
-            <section className="panel" style={{ marginTop: "24px", padding: "28px" }}>
-              <PanelTitle
-                icon={<Shield />}
-                title="About BioThreat AI"
-                subtitle="AI-assisted early-warning and decision-support prototype"
-              />
-
-              <div style={{
-                display: "grid",
-                gap: "16px",
-                marginTop: "20px",
-              }}>
-                <div style={{
-                  padding: "20px",
-                  borderRadius: "16px",
-                  background: "rgba(255,255,255,0.035)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}>
-                  <h3 style={{ marginTop: 0 }}>What the system does</h3>
-                  <p style={{ marginBottom: 0, lineHeight: "1.7", opacity: 0.75 }}>
-                    BioThreat AI analyzes synthetic biosurveillance observations,
-                    looks for unusual patterns, calculates a prototype risk score,
-                    explains the contributing signals, and presents alerts and
-                    preparedness information for human review.
-                  </p>
-                </div>
-
-                <div style={{
-                  padding: "20px",
-                  borderRadius: "16px",
-                  background: "rgba(255,255,255,0.035)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}>
-                  <h3 style={{ marginTop: 0 }}>Pages in this prototype</h3>
-                  <div style={{ display: "grid", gap: "9px", fontSize: "14px", lineHeight: "1.6", opacity: 0.78 }}>
-                    <div><strong>Dashboard:</strong> live high-level status and recent activity.</div>
-                    <div><strong>New Analysis:</strong> enter synthetic observations and run the analysis.</div>
-                    <div><strong>Zone Map:</strong> view synthetic incidents geographically.</div>
-                    <div><strong>Statistics:</strong> inspect risk, evidence, trends, and the AI summary.</div>
-                    <div><strong>Emergency Readiness:</strong> review hospital capacity, emergency staff, notifications, supply stock, and diagnostics.</div>
-                    <div><strong>About:</strong> understand the prototype's purpose and limitations.</div>
-                  </div>
-                </div>
-
-                <div style={{
-                  padding: "20px",
-                  borderRadius: "16px",
-                  background: "rgba(255,170,60,0.08)",
-                  border: "1px solid rgba(255,170,60,0.22)",
-                }}>
-                  <h3 style={{ marginTop: 0 }}>Human-in-the-loop</h3>
-                  <p style={{ marginBottom: 0, lineHeight: "1.7", opacity: 0.8 }}>
-                    AI identifies patterns and provides decision support. It does
-                    not diagnose disease or confirm a biological threat, and it does
-                    not autonomously order public-health or medical interventions.
-                    Authorized human reviewers remain responsible for real-world decisions.
-                  </p>
-                </div>
-
-                <div style={{
-                  padding: "20px",
-                  borderRadius: "16px",
-                  background: "rgba(100,180,255,0.08)",
-                  border: "1px solid rgba(100,180,255,0.18)",
-                }}>
-                  <h3 style={{ marginTop: 0 }}>Prototype data notice</h3>
-                  <p style={{ marginBottom: 0, lineHeight: "1.7", opacity: 0.78 }}>
-                    Surveillance, hospital, staff, inventory, and notification values
-                    shown in this prototype are synthetic demonstration data.
-                    Notification delivery displayed by the application is simulated.
-                  </p>
-                </div>
-              </div>
-            </section>
-          )}
 
           <footer>
 
@@ -3957,7 +2913,6 @@ function SideItem({
   icon,
   text,
   active,
-  onClick,
 }) {
 
   return (
@@ -3968,15 +2923,6 @@ function SideItem({
           ? "side-item active"
           : "side-item"
       }
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          onClick?.();
-        }
-      }}
-      style={{ cursor: "pointer" }}
     >
 
       {icon}
@@ -4263,18 +3209,28 @@ function ActivityRow({
   value,
   time,
 }) {
+
   return (
+
     <div className="activity-row">
+
       {color ? (
+
         <span
           className={`activity-dot ${color}`}
         />
+
       ) : (
+
         <span className="activity-icon">
           {icon}
         </span>
+
       )}
+
+
       <div className="activity-text">
+
         <strong>
           {title}
         </strong>
@@ -4297,9 +3253,12 @@ function ActivityRow({
     </div>
   );
 }
+
+
 // ==================================================
 // LEGEND
 // ==================================================
+
 function Legend({
   cls,
   text,
@@ -4318,14 +3277,18 @@ function Legend({
     </div>
   );
 }
+
+
 // ==================================================
 // OLD STAT COMPONENT
 // ==================================================
+
 function Stat({
   icon,
   value,
   text,
 }) {
+
   return (
 
     <div className="stat">
@@ -4343,7 +3306,10 @@ function Stat({
     </div>
   );
 }
+
+
 // ==================================================
 // EXPORT
 // ==================================================
+
 export default App;
